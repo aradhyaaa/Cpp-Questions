@@ -1,0 +1,32 @@
+#include <iostream>
+
+int main() {
+    int numTerms;
+
+    std::cout << "Enter the number of Fibonacci terms to generate: ";
+    std::cin >> numTerms;
+
+    if (numTerms <= 0) {
+        std::cout << "Please enter a positive integer." << std::endl;
+    } else {
+        int firstTerm = 0, secondTerm = 1, nextTerm;
+
+        std::cout << "Fibonacci Sequence up to " << numTerms << " terms: ";
+
+        for (int i = 0; i < numTerms; ++i) {
+            if (i <= 1) {
+                nextTerm = i;
+            } else {
+                nextTerm = firstTerm + secondTerm;
+                firstTerm = secondTerm;
+                secondTerm = nextTerm;
+            }
+
+            std::cout << nextTerm << " ";
+        }
+
+        std::cout << std::endl;
+    }
+
+    return 0;
+}
