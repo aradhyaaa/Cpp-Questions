@@ -1,0 +1,72 @@
+#include <iostream>
+#include <vector>
+
+struct Task {
+    std::string description;
+    bool completed;
+};
+
+int main() {
+    std::vector<Task> toDoList;
+    char choice;
+
+    do {
+        std::cout << "To-Do List Menu:" << std::endl;
+        std::cout << "1. Add a task (A)" << std::endl;
+        std::cout << "2. View tasks (V)" << std::endl;
+        std::cout << "3. Mark task as completed (M)" << std::endl;
+        std::cout << "4. Quit (Q)" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1':
+            case 'A':
+            case 'a': {
+                Task newTask;
+                std::cout << "Enter task description: ";
+                std::cin.ignore();
+                std::getline(std::cin, newTask.description);
+                newTask.completed = false;
+                toDoList.push_back(newTask);
+                break;
+            }
+            case '2':
+            case 'V':
+            case 'v': {
+                std::cout << "To-Do List:" << std::endl;
+                for (size_t i = 0; i < toDoList.size(); ++i) {
+                    std::cout << (i + 1) << ". ";
+                    if (toDoList[i].completed) {
+                        std::cout << "[Completed] ";
+                    }
+                    std::cout << toDoList[i].description << std::endl;
+                }
+                break;
+            }
+            case '3':
+            case 'M':
+            case 'm': {
+                int taskNumber;
+                std::cout << "Enter the number of the task to mark as completed: ";
+                std::cin >> taskNumber;
+                if (taskNumber >= 1 && taskNumber <= toDoList.size()) {
+                    toDoList[taskNumber - 1].completed = true;
+                    std::cout << "Task marked as completed." << std::endl;
+                } else {
+                    std::cout << "Invalid task number." << std::endl;
+                }
+                break;
+            }
+            case '4':
+            case 'Q':
+            case 'q':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '4' && choice != 'Q' && choice != 'q');
+
+    return 0;
+}
