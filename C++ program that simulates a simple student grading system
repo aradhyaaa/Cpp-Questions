@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+
+struct Student {
+    std::string name;
+    int score;
+};
+
+int main() {
+    std::vector<Student> students;
+    char addAnother;
+    int totalScore = 0;
+
+    do {
+        Student student;
+        std::cout << "Enter the student's name: ";
+        std::cin >> student.name;
+
+        std::cout << "Enter the student's score: ";
+        std::cin >> student.score;
+
+        students.push_back(student);
+        totalScore += student.score;
+
+        std::cout << "Do you want to add another student? (Y/N): ";
+        std::cin >> addAnother;
+    } while (addAnother == 'Y' || addAnother == 'y');
+
+    int numStudents = students.size();
+    if (numStudents == 0) {
+        std::cout << "No student data entered." << std::endl;
+    } else {
+        double averageScore = static_cast<double>(totalScore) / numStudents;
+        std::cout << "Average Score: " << averageScore << std::endl;
+
+        std::cout << "Students who passed:" << std::endl;
+        for (const Student& student : students) {
+            if (student.score >= 50) {
+                std::cout << student.name << " (" << student.score << ")\n";
+            }
+        }
+
+        std::cout << "Students who failed:" << std::endl;
+        for (const Student& student : students) {
+            if (student.score < 50) {
+                std::cout << student.name << " (" << student.score << ")\n";
+            }
+        }
+    }
+
+    return 0;
+}
