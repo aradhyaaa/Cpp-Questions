@@ -1,0 +1,72 @@
+#include <iostream>
+#include <iomanip>
+
+double accountBalance = 1000.0; // Initial account balance
+
+// Function to check account balance
+void checkBalance() {
+    std::cout << "Your account balance is: $" << std::fixed << std::setprecision(2) << accountBalance << std::endl;
+}
+
+// Function to deposit money
+void deposit() {
+    double depositAmount;
+    std::cout << "Enter the amount you want to deposit: $";
+    std::cin >> depositAmount;
+
+    if (depositAmount > 0) {
+        accountBalance += depositAmount;
+        std::cout << "Deposit successful. Your new balance is: $" << std::fixed << std::setprecision(2) << accountBalance << std::endl;
+    } else {
+        std::cout << "Invalid deposit amount. Please enter a positive value." << std::endl;
+    }
+}
+
+// Function to withdraw money
+void withdraw() {
+    double withdrawalAmount;
+    std::cout << "Enter the amount you want to withdraw: $";
+    std::cin >> withdrawalAmount;
+
+    if (withdrawalAmount > 0 && withdrawalAmount <= accountBalance) {
+        accountBalance -= withdrawalAmount;
+        std::cout << "Withdrawal successful. Your new balance is: $" << std::fixed << std::setprecision(2) << accountBalance << std::endl;
+    } else if (withdrawalAmount > accountBalance) {
+        std::cout << "Insufficient funds. Your account balance is: $" << std::fixed << std::setprecision(2) << accountBalance << std::endl;
+    } else {
+        std::cout << "Invalid withdrawal amount. Please enter a positive value." << std::endl;
+    }
+}
+
+int main() {
+    char option;
+
+    do {
+        std::cout << "ATM Menu:" << std::endl;
+        std::cout << "1. Check Balance" << std::endl;
+        std::cout << "2. Deposit" << std::endl;
+        std::cout << "3. Withdraw" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Select an option: ";
+        std::cin >> option;
+
+        switch (option) {
+            case '1':
+                checkBalance();
+                break;
+            case '2':
+                deposit();
+                break;
+            case '3':
+                withdraw();
+                break;
+            case '4':
+                std::cout << "Exiting the ATM. Thank you!" << std::endl;
+                break;
+            default:
+                std::cout << "Invalid option. Please try again." << std::endl;
+        }
+    } while (option != '4');
+
+    return 0;
+}
