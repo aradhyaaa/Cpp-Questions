@@ -1,0 +1,49 @@
+#include <iostream>
+
+int main() {
+    int score = 0;
+    char choice;
+
+    std::cout << "Welcome to the Quiz Game!" << std::endl;
+    std::cout << "Answer the following questions:" << std::endl;
+
+    // Question 1
+    std::cout << "1. What is the capital of France?" << std::endl;
+    std::cout << "A) London  B) Berlin  C) Paris  D) Madrid" << std::endl;
+    std::cout << "Your choice (A, B, C, or D): ";
+    std::cin >> choice;
+    if (choice == 'C' || choice == 'c') {
+        std::cout << "Correct!" << std::endl;
+        score++;
+    } else {
+        std::cout << "Incorrect. The correct answer is C) Paris." << std::endl;
+    }
+
+    // Question 2
+    std::cout << "2. What is the largest planet in our solar system?" << std::endl;
+    std::cout << "A) Earth  B) Venus  C) Mars  D) Jupiter" << std::endl;
+    std::cout << "Your choice (A, B, C, or D): ";
+    std::cin >> choice;
+    if (choice == 'D' || choice == 'd') {
+        std::cout << "Correct!" << std::endl;
+        score++;
+    } else {
+        std::cout << "Incorrect. The correct answer is D) Jupiter." << std::endl;
+    }
+
+    // Question 3
+    std::cout << "3. What is the chemical symbol for gold?" << std::endl;
+    std::cout << "A) Go  B) Au  C) Ag  D) Gd" << std::endl;
+    std::cout << "Your choice (A, B, C, or D): ";
+    std::cin >> choice;
+    if (choice == 'B' || choice == 'b') {
+        std::cout << "Correct!" << std::endl;
+        score++;
+    } else {
+        std::cout << "Incorrect. The correct answer is B) Au." << std::endl;
+    }
+
+    std::cout << "Your final score is: " << score << " out of 3" << std::endl;
+
+    return 0;
+}
