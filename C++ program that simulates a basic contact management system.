@@ -1,0 +1,50 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+struct Contact {
+    std::string name;
+    std::string phoneNumber;
+};
+
+int main() {
+    std::vector<Contact> contacts;
+    char choice;
+
+    do {
+        std::cout << "Contact Management System" << std::endl;
+        std::cout << "1. Add Contact" << std::endl;
+        std::cout << "2. View Contacts" << std::endl;
+        std::cout << "3. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                Contact contact;
+                std::cout << "Enter the contact's name: ";
+                std::cin.ignore();
+                std::getline(std::cin, contact.name);
+                std::cout << "Enter the contact's phone number: ";
+                std::cin >> contact.phoneNumber;
+                contacts.push_back(contact);
+                std::cout << "Contact added." << std::endl;
+                break;
+            }
+            case '2': {
+                std::cout << "Contacts:" << std::endl;
+                for (const Contact& contact : contacts) {
+                    std::cout << "Name: " << contact.name << ", Phone Number: " << contact.phoneNumber << std::endl;
+                }
+                break;
+            }
+            case '3':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '3');
+
+    return 0;
+}
