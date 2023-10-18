@@ -1,0 +1,70 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+struct Product {
+    std::string name;
+    int quantity;
+};
+
+int main() {
+    std::vector<Product> inventory;
+    char choice;
+
+    do {
+        std::cout << "Inventory Management System" << std::endl;
+        std::cout << "1. Add Product" << std::endl;
+        std::cout << "2. Check Inventory" << std::endl;
+        std::cout << "3. Remove Product" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                Product product;
+                std::cout << "Enter the product name: ";
+                std::cin.ignore();
+                std::getline(std::cin, product.name);
+                std::cout << "Enter the quantity: ";
+                std::cin >> product.quantity;
+                inventory.push_back(product);
+                std::cout << "Product added to inventory." << std::endl;
+                break;
+            }
+            case '2': {
+                std::cout << "Current Inventory:" << std::endl;
+                for (const Product& product : inventory) {
+                    std::cout << product.name << ": " << product.quantity << std::endl;
+                }
+                break;
+            }
+            case '3': {
+                std::string productName;
+                std::cout << "Enter the product name to remove: ";
+                std::cin.ignore();
+                std::getline(std::cin, productName);
+                bool found = false;
+                for (auto it = inventory.begin(); it != inventory.end(); ++it) {
+                    if (it->name == productName) {
+                        inventory.erase(it);
+                        found = true;
+                        std::cout << "Product removed from inventory." << std::endl;
+                        break;
+                    }
+                }
+                if (!found) {
+                    std::cout << "Product not found in inventory." << std::endl;
+                }
+                break;
+            }
+            case '4':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '4');
+
+    return 0;
+}
