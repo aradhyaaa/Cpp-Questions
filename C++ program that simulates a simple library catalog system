@@ -1,0 +1,88 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+struct Book {
+    std::string title;
+    std::string author;
+};
+
+int main() {
+    std::vector<Book> library;
+    char choice;
+
+    do {
+        std::cout << "Library Catalog System" << std::endl;
+        std::cout << "1. Add Book" << std::endl;
+        std::cout << "2. View Books" << std::endl;
+        std::cout << "3. Search by Title" << std::endl;
+        std::cout << "4. Search by Author" << std::endl;
+        std::cout << "5. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                Book book;
+                std::cout << "Enter the book's title: ";
+                std::cin.ignore();
+                std::getline(std::cin, book.title);
+                std::cout << "Enter the book's author: ";
+                std::getline(std::cin, book.author);
+                library.push_back(book);
+                std::cout << "Book added to the catalog." << std::endl;
+                break;
+            }
+            case '2': {
+                std::cout << "Library Catalog:" << std::endl;
+                for (const Book& book : library) {
+                    std::cout << "Title: " << book.title << ", Author: " << book.author << std::endl;
+                }
+                break;
+            }
+            case '3': {
+                std::string searchTitle;
+                std::cout << "Enter the title to search: ";
+                std::cin.ignore();
+                std::getline(std::cin, searchTitle);
+                bool found = false;
+                std::cout << "Matching Books by Title:" << std::endl;
+                for (const Book& book : library) {
+                    if (book.title.find(searchTitle) != std::string::npos) {
+                        std::cout << "Title: " << book.title << ", Author: " << book.author << std::endl;
+                        found = true;
+                    }
+                }
+                if (!found) {
+                    std::cout << "No matching books found by title." << std::endl;
+                }
+                break;
+            }
+            case '4': {
+                std::string searchAuthor;
+                std::cout << "Enter the author to search: ";
+                std::cin.ignore();
+                std::getline(std::cin, searchAuthor);
+                bool found = false;
+                std::cout << "Matching Books by Author:" << std::endl;
+                for (const Book& book : library) {
+                    if (book.author.find(searchAuthor) != std::string::npos) {
+                        std::cout << "Title: " << book.title << ", Author: " << book.author << std::endl;
+                        found = true;
+                    }
+                }
+                if (!found) {
+                    std::cout << "No matching books found by author." << std::endl;
+                }
+                break;
+            }
+            case '5':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '5');
+
+    return 0;
+}
