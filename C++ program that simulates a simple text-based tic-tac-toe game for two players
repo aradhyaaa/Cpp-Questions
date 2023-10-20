@@ -1,0 +1,81 @@
+#include <iostream>
+#include <vector>
+
+void printBoard(const std::vector<std::vector<char>>& board) {
+    for (const std::vector<char>& row : board) {
+        for (char cell : row) {
+            std::cout << cell << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+bool isGameOver(const std::vector<std::vector<char>>& board) {
+    // Check rows, columns, and diagonals for a win
+    for (int i = 0; i < 3; ++i) {
+        if (board[i][0] != ' ' && board[i][0] == board[i][1] && board[i][1] == board[i][2]) {
+            return true;
+        }
+        if (board[0][i] != ' ' && board[0][i] == board[1][i] && board[1][i] == board[2][i]) {
+            return true;
+        }
+    }
+    if (board[0][0] != ' ' && board[0][0] == board[1][1] && board[1][1] == board[2][2]) {
+        return true;
+    }
+    if (board[0][2] != ' ' && board[0][2] == board[1][1] && board[1][1] == board[2][0]) {
+        return true;
+    }
+
+    // Check for a draw
+    for (const std::vector<char>& row : board) {
+        for (char cell : row) {
+            if (cell == ' ') {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+int main() {
+    std::vector<std::vector<char>> board(3, std::vector<char>(3, ' '));
+    int row, col;
+    char currentPlayer = 'X';
+
+    std::cout << "Tic-Tac-Toe Game" << std::endl;
+
+    do {
+        // Print the current state of the board
+        printBoard(board);
+
+        // Get the current player's move
+        std::cout << "Player " << currentPlayer << ", enter your move (row and column): ";
+        std::cin >> row >> col;
+
+        if (row < 1 || row > 3 || col < 1 || col > 3 || board[row - 1][col - 1] != ' ') {
+            std::cout << "Invalid move. Try again." << std::endl;
+            continue;
+        }
+
+        // Make the move
+        board[row - 1][col - 1] = currentPlayer;
+
+        // Check if the game is over
+        if (isGameOver(board)) {
+            printBoard(board);
+            if (currentPlayer == 'X') {
+                std::cout << "Player X wins!" << std::endl;
+            } else {
+                std::cout << "Player O wins!" << std::endl;
+            }
+            break;
+        }
+
+        // Switch to the other player
+        currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+
+    } while (true);
+
+    return 0;
+}
