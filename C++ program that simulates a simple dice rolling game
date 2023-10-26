@@ -1,0 +1,36 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+int rollDice() {
+    return (rand() % 6) + 1; // Generates a random number between 1 and 6
+}
+
+int main() {
+    srand(static_cast<unsigned>(time(0))); // Seed the random number generator with the current time
+
+    char playAgain;
+    int targetNumber, rollCount = 0;
+    bool quit = false;
+
+    std::cout << "Dice Rolling Game" << std::endl;
+
+    do {
+        std::cout << "Enter a target number (2 to 12): ";
+        std::cin >> targetNumber;
+
+        if (targetNumber < 2 || targetNumber > 12) {
+            std::cout << "Invalid target number. Please try again." << std::endl;
+            continue;
+        }
+
+        while (true) {
+            int dice1 = rollDice();
+            int dice2 = rollDice();
+            int total = dice1 + dice2;
+            rollCount++;
+
+            std::cout << "Roll " << rollCount << ": " << dice1 << " + " << dice2 << " = " << total << std::endl;
+
+            if (total == targetNumber) {
+                std::cout << "Congratulations! You matched the target number (" << targetNumber << ") in " << rollCount
