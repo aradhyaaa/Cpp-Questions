@@ -1,0 +1,112 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+struct BankAccount {
+    std::string accountNumber;
+    double balance;
+};
+
+int main() {
+    std::vector<BankAccount> accounts;
+    char choice;
+
+    do {
+        std::cout << "Bank Account Management System" << std::endl;
+        std::cout << "1. Create Account" << std::endl;
+        std::cout << "2. Deposit" << std::endl;
+        std::cout << "3. Withdraw" << std::endl;
+        std::cout << "4. Check Balance" << std::endl;
+        std::cout << "5. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                BankAccount account;
+                std::cout << "Enter your account number: ";
+                std::cin >> account.accountNumber;
+                account.balance = 0.0;
+                accounts.push_back(account);
+                std::cout << "Account created." << std::endl;
+                break;
+            }
+            case '2': {
+                std::string accountNumber;
+                double amount;
+                std::cout << "Enter your account number: ";
+                std::cin >> accountNumber;
+                bool found = false;
+                for (BankAccount& account : accounts) {
+                    if (account.accountNumber == accountNumber) {
+                        std::cout << "Enter the amount to deposit: $";
+                        std::cin >> amount;
+                        if (amount > 0) {
+                            account.balance += amount;
+                            std::cout << "Deposit successful. Your new balance is: $" << account.balance << std::endl;
+                        } else {
+                            std::cout << "Invalid deposit amount. Please enter a positive value." << std::endl;
+                        }
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    std::cout << "Account not found." << std::endl;
+                }
+                break;
+            }
+            case '3': {
+                std::string accountNumber;
+                double amount;
+                std::cout << "Enter your account number: ";
+                std::cin >> accountNumber;
+                bool found = false;
+                for (BankAccount& account : accounts) {
+                    if (account.accountNumber == accountNumber) {
+                        std::cout << "Enter the amount to withdraw: $";
+                        std::cin >> amount;
+                        if (amount > 0 && amount <= account.balance) {
+                            account.balance -= amount;
+                            std::cout << "Withdrawal successful. Your new balance is: $" << account.balance << std::endl;
+                        } else if (amount > account.balance) {
+                            std::cout << "Insufficient funds. Your account balance is: $" << account.balance << std::endl;
+                        } else {
+                            std::cout << "Invalid withdrawal amount. Please enter a positive value." << std::endl;
+                        }
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    std::cout << "Account not found." << std::endl;
+                }
+                break;
+            }
+            case '4': {
+                std::string accountNumber;
+                std::cout << "Enter your account number: ";
+                std::cin >> accountNumber;
+                bool found = false;
+                for (const BankAccount& account : accounts) {
+                    if (account.accountNumber == accountNumber) {
+                        std::cout << "Your account balance is: $" << account.balance << std::endl;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    std::cout << "Account not found." << std::endl;
+                }
+                break;
+            }
+            case '5':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '5');
+
+    return 0;
+}
