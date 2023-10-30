@@ -1,0 +1,75 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+struct Question {
+    std::string questionText;
+    std::vector<std::string> options;
+    char correctAnswer;
+};
+
+int main() {
+    std::vector<Question> quiz;
+    char choice;
+
+    do {
+        std::cout << "Quiz Game" << std::endl;
+        std::cout << "1. Add Question" << std::endl;
+        std::cout << "2. Start Quiz" << std::endl;
+        std::cout << "3. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                Question question;
+                std::cin.ignore();
+                std::cout << "Enter the question: ";
+                std::getline(std::cin, question.questionText);
+                for (char option = 'A'; option <= 'D'; ++option) {
+                    std::string optionText;
+                    std::cout << "Enter option " << option << ": ";
+                    std::getline(std::cin, optionText);
+                    question.options.push_back(optionText);
+                }
+                std::cout << "Enter the correct answer (A, B, C, or D): ";
+                std::cin >> question.correctAnswer;
+                quiz.push_back(question);
+                std::cout << "Question added to the quiz." << std::endl;
+                break;
+            }
+            case '2': {
+                if (quiz.empty()) {
+                    std::cout << "There are no questions in the quiz yet. Add questions first." << std::endl;
+                    break;
+                }
+                int score = 0;
+                for (const Question& question : quiz) {
+                    std::cout << question.questionText << std::endl;
+                    for (char option = 'A'; option <= 'D'; ++option) {
+                        std::cout << option << ") " << question.options[option - 'A'] << std::endl;
+                    }
+                    char userAnswer;
+                    std::cout << "Your answer (A, B, C, or D): ";
+                    std::cin >> userAnswer;
+                    if (userAnswer == question.correctAnswer) {
+                        std::cout << "Correct!" << std::endl;
+                        score++;
+                    } else {
+                        std::cout << "Wrong! The correct answer is " << question.correctAnswer << ") "
+                                  << question.options[question.correctAnswer - 'A'] << std::endl;
+                    }
+                }
+                std::cout << "Quiz completed. Your score is: " << score << " out of " << quiz.size() << std::endl;
+                break;
+            }
+            case '3':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '3');
+
+    return 0;
+}
