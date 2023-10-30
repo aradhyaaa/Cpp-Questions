@@ -1,0 +1,84 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+struct Note {
+    std::string title;
+    std::string content;
+};
+
+int main() {
+    std::vector<Note> notes;
+    char choice;
+
+    do {
+        std::cout << "Note-Taking Application" << std::endl;
+        std::cout << "1. Create Note" << std::endl;
+        std::cout << "2. View Notes" << std::endl;
+        std::cout << "3. Delete Note" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                Note note;
+                std::cout << "Enter the note title: ";
+                std::cin.ignore();
+                std::getline(std::cin, note.title);
+                std::cout << "Enter the note content: ";
+                std::getline(std::cin, note.content);
+                notes.push_back(note);
+                std::cout << "Note created." << std::endl;
+                break;
+            }
+            case '2': {
+                if (notes.empty()) {
+                    std::cout << "No notes available." << std::endl;
+                } else {
+                    std::cout << "Notes:" << std::endl;
+                    for (size_t i = 0; i < notes.size(); ++i) {
+                        std::cout << (i + 1) << ". " << notes[i].title << std::endl;
+                    }
+                    int noteIndex;
+                    std::cout << "Enter the index of the note to view (0 to cancel): ";
+                    std::cin >> noteIndex;
+                    if (noteIndex >= 1 && noteIndex <= static_cast<int>(notes.size())) {
+                        std::cout << "Note Title: " << notes[noteIndex - 1].title << std::endl;
+                        std::cout << "Note Content: " << notes[noteIndex - 1].content << std::endl;
+                    } else if (noteIndex != 0) {
+                        std::cout << "Invalid note index." << std::endl;
+                    }
+                }
+                break;
+            }
+            case '3': {
+                if (notes.empty()) {
+                    std::cout << "No notes available for deletion." << std::endl;
+                } else {
+                    std::cout << "Notes for Deletion:" << std::endl;
+                    for (size_t i = 0; i < notes.size(); ++i) {
+                        std::cout << (i + 1) << ". " << notes[i].title << std::endl;
+                    }
+                    int noteIndex;
+                    std::cout << "Enter the index of the note to delete (0 to cancel): ";
+                    std::cin >> noteIndex;
+                    if (noteIndex >= 1 && noteIndex <= static_cast<int>(notes.size())) {
+                        notes.erase(notes.begin() + noteIndex - 1);
+                        std::cout << "Note deleted." << std::endl;
+                    } else if (noteIndex != 0) {
+                        std::cout << "Invalid note index." << std::endl;
+                    }
+                }
+                break;
+            }
+            case '4':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '4');
+
+    return 0;
+}
