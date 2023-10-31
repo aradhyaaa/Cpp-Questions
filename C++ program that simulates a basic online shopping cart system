@@ -1,0 +1,107 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+struct Product {
+    std::string name;
+    double price;
+};
+
+int main() {
+    std::vector<Product> products;
+    std::vector<Product> cart;
+    char choice;
+
+    // Populate the list of available products
+    products.push_back({"Product A", 10.99});
+    products.push_back({"Product B", 20.49});
+    products.push_back({"Product C", 15.99});
+    products.push_back({"Product D", 5.99});
+
+    do {
+        std::cout << "Online Shopping Cart" << std::endl;
+        std::cout << "1. Add Item to Cart" << std::endl;
+        std::cout << "2. View Cart" << std::endl;
+        std::cout << "3. Remove Item from Cart" << std::endl;
+        std::cout << "4. Checkout" << std::endl;
+        std::cout << "5. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                int productIndex;
+                std::cout << "Available Products:" << std::endl;
+                for (int i = 0; i < products.size(); i++) {
+                    std::cout << (i + 1) << ". " << products[i].name << " - $" << products[i].price << std::endl;
+                }
+                std::cout << "Enter the product number to add to your cart: ";
+                std::cin >> productIndex;
+                if (productIndex >= 1 && productIndex <= products.size()) {
+                    cart.push_back(products[productIndex - 1]);
+                    std::cout << "Item added to your cart." << std::endl;
+                } else {
+                    std::cout << "Invalid product number." << std::endl;
+                }
+                break;
+            }
+            case '2': {
+                if (cart.empty()) {
+                    std::cout << "Your cart is empty." << std::endl;
+                } else {
+                    double total = 0;
+                    std::cout << "Your Cart:" << std::endl;
+                    for (int i = 0; i < cart.size(); i++) {
+                        std::cout << (i + 1) << ". " << cart[i].name << " - $" << cart[i].price << std::endl;
+                        total += cart[i].price;
+                    }
+                    std::cout << "Total: $" << total << std::endl;
+                }
+                break;
+            }
+            case '3': {
+                if (cart.empty()) {
+                    std::cout << "Your cart is already empty." << std::endl;
+                } else {
+                    int itemIndex;
+                    std::cout << "Your Cart:" << std::endl;
+                    for (int i = 0; i < cart.size(); i++) {
+                        std::cout << (i + 1) << ". " << cart[i].name << " - $" << cart[i].price << std::endl;
+                    }
+                    std::cout << "Enter the item number to remove from your cart: ";
+                    std::cin >> itemIndex;
+                    if (itemIndex >= 1 && itemIndex <= cart.size()) {
+                        std::cout << "Item removed from your cart." << std::endl;
+                        cart.erase(cart.begin() + itemIndex - 1);
+                    } else {
+                        std::cout << "Invalid item number." << std::endl;
+                    }
+                }
+                break;
+            }
+            case '4': {
+                if (cart.empty()) {
+                    std::cout << "Your cart is empty. Add items to your cart before checking out." << std::endl;
+                } else {
+                    double total = 0;
+                    std::cout << "Checkout Summary:" << std::endl;
+                    for (int i = 0; i < cart.size(); i++) {
+                        std::cout << cart[i].name << " - $" << cart[i].price << std::endl;
+                        total += cart[i].price;
+                    }
+                    std::cout << "Total: $" << total << std::endl;
+                    std::cout << "Thank you for your purchase!" << std::endl;
+                    cart.clear(); // Empty the cart after checkout
+                }
+                break;
+            }
+            case '5':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '5');
+
+    return 0;
+}
