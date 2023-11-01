@@ -1,0 +1,44 @@
+#include <iostream>
+#include <queue>
+#include <cstdlib>
+#include <ctime>
+
+struct Customer {
+    int arrivalTime;
+    int serviceTime;
+};
+
+int main() {
+    std::srand(static_cast<unsigned>(std::time(nullptr));
+
+    std::queue<Customer> bankQueue;
+    int currentTime = 0;
+    int totalCustomers = 0;
+    int totalWaitTime = 0;
+
+    for (int currentTime = 0; currentTime < 480; currentTime++) {
+        if (std::rand() % 10 < 2) {
+            Customer customer;
+            customer.arrivalTime = currentTime;
+            customer.serviceTime = 1 + (std::rand() % 5);
+            bankQueue.push(customer);
+            totalCustomers++;
+            std::cout << "Customer " << totalCustomers << " arrived at time " << currentTime << std::endl;
+        }
+
+        if (!bankQueue.empty()) {
+            Customer currentCustomer = bankQueue.front();
+            if (currentTime - currentCustomer.arrivalTime >= currentCustomer.serviceTime) {
+                bankQueue.pop();
+                totalWaitTime += (currentTime - currentCustomer.arrivalTime);
+                std::cout << "Customer " << totalCustomers - bankQueue.size() << " served at time " << currentTime << std::endl;
+            }
+        }
+    }
+
+    std::cout << "Simulation completed." << std::endl;
+    std::cout << "Total customers served: " << totalCustomers << std::endl;
+    std::cout << "Average wait time: " << static_cast<double>(totalWaitTime) / totalCustomers << " minutes" << std::endl;
+
+    return 0;
+}
