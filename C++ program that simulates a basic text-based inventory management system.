@@ -1,0 +1,71 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+struct Item {
+    std::string name;
+    int quantity;
+};
+
+int main() {
+    std::vector<Item> inventory;
+    char choice;
+
+    do {
+        std::cout << "Inventory Management System" << std::endl;
+        std::cout << "1. Add Item" << std::endl;
+        std::cout << "2. View Inventory" << std::endl;
+        std::cout << "3. Remove Item" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                Item item;
+                std::cout << "Enter the item name: ";
+                std::cin.ignore();
+                std::getline(std::cin, item.name);
+                std::cout << "Enter the quantity: ";
+                std::cin >> item.quantity;
+                inventory.push_back(item);
+                std::cout << "Item added to the inventory." << std::endl;
+                break;
+            }
+            case '2': {
+                if (inventory.empty()) {
+                    std::cout << "Your inventory is empty." << std::endl;
+                } else {
+                    std::cout << "Inventory:" << std::endl;
+                    for (size_t i = 0; i < inventory.size(); ++i) {
+                        std::cout << (i + 1) << ". " << inventory[i].name << " - Quantity: " << inventory[i].quantity << std::endl;
+                    }
+                }
+                break;
+            }
+            case '3': {
+                if (inventory.empty()) {
+                    std::cout << "Your inventory is already empty." << std::endl;
+                } else {
+                    size_t itemIndex;
+                    std::cout << "Enter the number of the item to remove: ";
+                    std::cin >> itemIndex;
+                    if (itemIndex >= 1 && itemIndex <= inventory.size()) {
+                        std::cout << "Item removed from the inventory." << std::endl;
+                        inventory.erase(inventory.begin() + itemIndex - 1);
+                    } else {
+                        std::cout << "Invalid item number." << std::endl;
+                    }
+                }
+                break;
+            }
+            case '4':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '4');
+
+    return 0;
+}
