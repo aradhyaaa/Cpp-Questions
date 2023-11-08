@@ -1,0 +1,87 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
+
+struct Student {
+    std::string name;
+    double grade;
+};
+
+int main() {
+    std::vector<Student> studentRecords;
+    char choice;
+
+    do {
+        std::cout << "Student Grade Tracking System" << std::endl;
+        std::cout << "1. Add Student Record" << std::endl;
+        std.cout << "2. View Student Records" << std::endl;
+        std::cout << "3. Calculate Average Grade" << std::endl;
+        std::cout << "4. List Top-Performing Students" << std::endl;
+        std::cout << "5. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                Student student;
+                std::cout << "Enter the student's name: ";
+                std::cin.ignore();
+                std::getline(std::cin, student.name);
+                std::cout << "Enter the student's grade: ";
+                std::cin >> student.grade;
+                studentRecords.push_back(student);
+                std::cout << "Student record added." << std::endl;
+                break;
+            }
+            case '2': {
+                if (studentRecords.empty()) {
+                    std::cout << "There are no student records in the system." << std::endl;
+                } else {
+                    std::cout << "Student Records:" << std::endl;
+                    std::cout << std::left << std::setw(20) << "Name" << std::setw(10) << "Grade" << std::endl;
+                    for (const Student& student : studentRecords) {
+                        std::cout << std::left << std::setw(20) << student.name << std::setw(10) << student.grade << std::endl;
+                    }
+                }
+                break;
+            }
+            case '3': {
+                if (studentRecords.empty()) {
+                    std::cout << "There are no student records in the system to calculate the average grade." << std::endl;
+                } else {
+                    double totalGrade = 0;
+                    for (const Student& student : studentRecords) {
+                        totalGrade += student.grade;
+                    }
+                    double averageGrade = totalGrade / studentRecords.size();
+                    std::cout << "Average Grade: " << averageGrade << std::endl;
+                }
+                break;
+            }
+            case '4': {
+                if (studentRecords.empty()) {
+                    std::cout << "There are no student records in the system to list top-performing students." << std::endl;
+                } else {
+                    double highestGrade = 0;
+                    std::cout << "Top-Performing Students:" << std::endl;
+                    std::cout << std::left << std::setw(20) << "Name" << std::setw(10) << "Grade" << std::endl;
+                    for (const Student& student : studentRecords) {
+                        if (student.grade >= highestGrade) {
+                            std::cout << std::left << std::setw(20) << student.name << std::setw(10) << student.grade << std::endl;
+                            highestGrade = student.grade;
+                        }
+                    }
+                }
+                break;
+            }
+            case '5':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '5');
+
+    return 0;
+}
