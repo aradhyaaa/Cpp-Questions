@@ -1,0 +1,105 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+struct Event {
+    std::string name;
+    std::string date;
+    std::string location;
+    int capacity;
+    int registeredAttendees;
+};
+
+struct Attendee {
+    std::string name;
+    std::vector<std::string> registeredEvents;
+};
+
+int main() {
+    std::vector<Event> events;
+    std::vector<Attendee> attendees;
+    char choice;
+
+    do {
+        std::cout << "Event Management System" << std::endl;
+        std::cout << "1. Add Event" << std::endl;
+        std::cout << "2. View Upcoming Events" << std::endl;
+        std::cout << "3. Register for Event" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                Event event;
+                std::cout << "Enter the event name: ";
+                std::cin.ignore();
+                std::getline(std::cin, event.name);
+                std::cout << "Enter the event date: ";
+                std::getline(std::cin, event.date);
+                std::cout << "Enter the event location: ";
+                std::getline(std::cin, event.location);
+                std::cout << "Enter the event capacity: ";
+                std::cin >> event.capacity;
+                event.registeredAttendees = 0;
+                events.push_back(event);
+                std::cout << "Event added to the system." << std::endl;
+                break;
+            }
+            case '2': {
+                if (events.empty()) {
+                    std::cout << "There are no upcoming events." << std::endl;
+                } else {
+                    std::cout << "Upcoming Events:" << std::endl;
+                    for (const Event& event : events) {
+                        std::cout << "Name: " << event.name << ", Date: " << event.date << ", Location: " << event.location
+                                  << ", Capacity: " << event.capacity << ", Registered Attendees: " << event.registeredAttendees << std::endl;
+                    }
+                }
+                break;
+            }
+            case '3': {
+                if (events.empty()) {
+                    std::cout << "There are no events to register for." << std::endl;
+                } else {
+                    std::string attendeeName;
+                    std::cout << "Enter your name: ";
+                    std::cin.ignore();
+                    std::getline(std::cin, attendeeName);
+
+                    Attendee attendee;
+                    attendee.name = attendeeName;
+                    attendees.push_back(attendee);
+
+                    std::cout << "Available Events:" << std::endl;
+                    for (size_t i = 0; i < events.size(); ++i) {
+                        std::cout << (i + 1) << ". " << "Name: " << events[i].name << ", Date: " << events[i].date
+                                  << ", Location: " << events[i].location << ", Capacity: " << events[i].capacity
+                                  << ", Registered Attendees: " << events[i].registeredAttendees << std::endl;
+                    }
+
+                    int eventIndex;
+                    std::cout << "Enter the number of the event to register for: ";
+                    std::cin >> eventIndex;
+
+                    if (eventIndex >= 1 && eventIndex <= events.size() &&
+                        events[eventIndex - 1].registeredAttendees < events[eventIndex - 1].capacity) {
+                        events[eventIndex - 1].registeredAttendees++;
+                        attendees.back().registeredEvents.push_back(events[eventIndex - 1].name);
+                        std::cout << "Successfully registered for the event." << std::endl;
+                    } else {
+                        std::cout << "Invalid event number or the event is full." << std::endl;
+                    }
+                }
+                break;
+            }
+            case '4':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '4');
+
+    return 0;
+}
