@@ -1,0 +1,86 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+struct Question {
+    std::string prompt;
+    std::string correctAnswer;
+};
+
+struct QuizResult {
+    std::string userAnswer;
+    bool isCorrect;
+};
+
+int main() {
+    std::vector<Question> questions;
+    std::vector<QuizResult> quizResults;
+    char choice;
+
+    do {
+        std::cout << "Quiz System" << std::endl;
+        std::cout << "1. Add Question" << std::endl;
+        std::cout << "2. Take Quiz" << std::endl;
+        std::cout << "3. View Quiz Results" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                Question question;
+                std::cout << "Enter the question prompt: ";
+                std::cin.ignore();
+                std::getline(std::cin, question.prompt);
+                std::cout << "Enter the correct answer: ";
+                std::getline(std::cin, question.correctAnswer);
+                questions.push_back(question);
+                std::cout << "Question added to the quiz." << std::endl;
+                break;
+            }
+            case '2': {
+                if (questions.empty()) {
+                    std::cout << "No questions available for the quiz." << std::endl;
+                } else {
+                    std::vector<QuizResult> currentQuizResults;
+
+                    std::cout << "Quiz:" << std::endl;
+                    for (size_t i = 0; i < questions.size(); ++i) {
+                        std::string userAnswer;
+                        std::cout << "Question " << (i + 1) << ": " << questions[i].prompt << std::endl;
+                        std::cout << "Your Answer: ";
+                        std::cin.ignore();
+                        std::getline(std::cin, userAnswer);
+
+                        bool isCorrect = (userAnswer == questions[i].correctAnswer);
+                        currentQuizResults.push_back({userAnswer, isCorrect});
+
+                        std::cout << (isCorrect ? "Correct!" : "Incorrect.") << std::endl;
+                    }
+
+                    quizResults.insert(quizResults.end(), currentQuizResults.begin(), currentQuizResults.end());
+                }
+                break;
+            }
+            case '3': {
+                if (quizResults.empty()) {
+                    std::cout << "No quiz results available." << std::endl;
+                } else {
+                    std::cout << "Quiz Results:" << std::endl;
+                    for (size_t i = 0; i < quizResults.size(); ++i) {
+                        std::cout << "Question " << (i + 1) << ": Your answer - " << quizResults[i].userAnswer
+                                  << ", Correct answer - " << (quizResults[i].isCorrect ? "Correct" : "Incorrect") << std::endl;
+                    }
+                }
+                break;
+            }
+            case '4':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '4');
+
+    return 0;
+}
