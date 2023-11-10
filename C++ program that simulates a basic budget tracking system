@@ -1,0 +1,101 @@
+#include <iostream>
+#include <vector>
+#include <iomanip>
+
+struct Transaction {
+    std::string description;
+    double amount;
+};
+
+int main() {
+    std::vector<Transaction> transactions;
+    char choice;
+
+    do {
+        std::cout << "Budget Tracking System" << std::endl;
+        std::cout << "1. Add Income" << std::endl;
+        std::cout << "2. Add Expense" << std::endl;
+        std::cout << "3. View Budget Summary" << std::endl;
+        std::cout << "4. Check Remaining Balance" << std::endl;
+        std::cout << "5. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                Transaction income;
+                std::cout << "Enter income description: ";
+                std::cin.ignore();
+                std::getline(std::cin, income.description);
+                std::cout << "Enter income amount: $";
+                std::cin >> income.amount;
+                transactions.push_back(income);
+                std::cout << "Income added." << std::endl;
+                break;
+            }
+            case '2': {
+                Transaction expense;
+                std::cout << "Enter expense description: ";
+                std::cin.ignore();
+                std::getline(std::cin, expense.description);
+                std::cout << "Enter expense amount: $";
+                std::cin >> expense.amount;
+                transactions.push_back(expense);
+                std::cout << "Expense added." << std::endl;
+                break;
+            }
+            case '3': {
+                if (transactions.empty()) {
+                    std::cout << "No transactions available." << std::endl;
+                } else {
+                    double totalIncome = 0;
+                    double totalExpenses = 0;
+
+                    std::cout << "Budget Summary:" << std::endl;
+                    std::cout << std::left << std::setw(20) << "Description" << std::setw(10) << "Amount" << std::endl;
+
+                    for (const Transaction& transaction : transactions) {
+                        std::cout << std::left << std::setw(20) << transaction.description << std::setw(10) << transaction.amount << std::endl;
+
+                        if (transaction.amount > 0) {
+                            totalIncome += transaction.amount;
+                        } else {
+                            totalExpenses += std::abs(transaction.amount);
+                        }
+                    }
+
+                    std::cout << std::setw(30) << "Total Income: $" << totalIncome << std::endl;
+                    std::cout << std::setw(30) << "Total Expenses: $" << totalExpenses << std::endl;
+                }
+                break;
+            }
+            case '4': {
+                if (transactions.empty()) {
+                    std::cout << "No transactions available to check remaining balance." << std::endl;
+                } else {
+                    double totalIncome = 0;
+                    double totalExpenses = 0;
+
+                    for (const Transaction& transaction : transactions) {
+                        if (transaction.amount > 0) {
+                            totalIncome += transaction.amount;
+                        } else {
+                            totalExpenses += std::abs(transaction.amount);
+                        }
+                    }
+
+                    double remainingBalance = totalIncome - totalExpenses;
+                    std::cout << "Remaining Balance: $" << remainingBalance << std::endl;
+                }
+                break;
+            }
+            case '5':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '5');
+
+    return 0;
+}
