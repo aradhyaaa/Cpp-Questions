@@ -1,0 +1,96 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+struct Product {
+    std::string name;
+    int quantity;
+};
+
+int main() {
+    std::vector<Product> inventory;
+    char choice;
+
+    do {
+        std::cout << "Inventory Management System" << std::endl;
+        std::cout << "1. Add Product" << std::endl;
+        std::cout << "2. View Inventory" << std::endl;
+        std::cout << "3. Update Product Quantity" << std::endl;
+        std::cout << "4. Check Low-Stock Items" << std::endl;
+        std::cout << "5. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                Product product;
+                std::cout << "Enter product name: ";
+                std::cin.ignore();
+                std::getline(std::cin, product.name);
+                std::cout << "Enter initial quantity: ";
+                std::cin >> product.quantity;
+                inventory.push_back(product);
+                std::cout << "Product added to the inventory." << std::endl;
+                break;
+            }
+            case '2': {
+                if (inventory.empty()) {
+                    std::cout << "Inventory is empty." << std::endl;
+                } else {
+                    std::cout << "Inventory:" << std::endl;
+                    for (const Product& product : inventory) {
+                        std::cout << "Product: " << product.name << ", Quantity: " << product.quantity << std::endl;
+                    }
+                }
+                break;
+            }
+            case '3': {
+                if (inventory.empty()) {
+                    std::cout << "No products in the inventory to update." << std::endl;
+                } else {
+                    std::cout << "Inventory:" << std::endl;
+                    for (size_t i = 0; i < inventory.size(); ++i) {
+                        std::cout << (i + 1) << ". " << "Product: " << inventory[i].name << ", Quantity: " << inventory[i].quantity << std::endl;
+                    }
+
+                    int productIndex;
+                    std::cout << "Enter the number of the product to update: ";
+                    std::cin >> productIndex;
+
+                    if (productIndex >= 1 && productIndex <= inventory.size()) {
+                        int newQuantity;
+                        std::cout << "Enter the new quantity: ";
+                        std::cin >> newQuantity;
+                        inventory[productIndex - 1].quantity = newQuantity;
+                        std::cout << "Product quantity updated." << std::endl;
+                    } else {
+                        std::cout << "Invalid product number." << std::endl;
+                    }
+                }
+                break;
+            }
+            case '4': {
+                const int lowStockThreshold = 10;
+
+                if (inventory.empty()) {
+                    std::cout << "Inventory is empty." << std::endl;
+                } else {
+                    std::cout << "Low-Stock Items:" << std::endl;
+                    for (const Product& product : inventory) {
+                        if (product.quantity < lowStockThreshold) {
+                            std::cout << "Product: " << product.name << ", Quantity: " << product.quantity << std::endl;
+                        }
+                    }
+                }
+                break;
+            }
+            case '5':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '5');
+
+    return 0;
+}
