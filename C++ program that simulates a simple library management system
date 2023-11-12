@@ -1,0 +1,139 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
+
+struct Book {
+    std::string title;
+    std::string author;
+    bool available;
+    std::string borrower;
+};
+
+struct BorrowingHistory {
+    std::string title;
+    std::string borrower;
+    bool returned;
+};
+
+int main() {
+    std::vector<Book> library;
+    std::vector<BorrowingHistory> borrowingHistory;
+    char choice;
+
+    do {
+        std::cout << "Library Management System" << std::endl;
+        std::cout << "1. Add Book" << std::endl;
+        std::cout << "2. Borrow Book" << std::endl;
+        std::cout << "3. Return Book" << std::endl;
+        std::cout << "4. View Available Books" << std::endl;
+        std::cout << "5. View Borrowing History" << std::endl;
+        std::cout << "6. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                Book book;
+                std::cout << "Enter book title: ";
+                std::cin.ignore();
+                std::getline(std::cin, book.title);
+                std::cout << "Enter book author: ";
+                std::getline(std::cin, book.author);
+                book.available = true;
+                library.push_back(book);
+                std::cout << "Book added to the library." << std::endl;
+                break;
+            }
+            case '2': {
+                if (library.empty()) {
+                    std::cout << "No books available in the library." << std::endl;
+                } else {
+                    std::cout << "Available Books:" << std::endl;
+                    for (const Book& book : library) {
+                        if (book.available) {
+                            std::cout << "Title: " << book.title << ", Author: " << book.author << std::endl;
+                        }
+                    }
+
+                    std::string bookToBorrow;
+                    std::cout << "Enter the title of the book to borrow: ";
+                    std::cin.ignore();
+                    std::getline(std::cin, bookToBorrow);
+
+                    for (Book& book : library) {
+                        if (book.title == bookToBorrow && book.available) {
+                            std::cout << "Enter your name: ";
+                            std::getline(std::cin, book.borrower);
+                            book.available = false;
+                            std::cout << "Book borrowed successfully." << std::endl;
+
+                            BorrowingHistory historyEntry = {book.title, book.borrower, false};
+                            borrowingHistory.push_back(historyEntry);
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+            case '3': {
+                if (library.empty()) {
+                    std::cout << "No books available in the library." << std::endl;
+                } else {
+                    std::string bookToReturn;
+                    std::cout << "Enter the title of the book to return: ";
+                    std::cin.ignore();
+                    std::getline(std::cin, bookToReturn);
+
+                    for (Book& book : library) {
+                        if (book.title == bookToReturn && !book.available) {
+                            book.available = true;
+                            std::cout << "Book returned successfully." << std::endl;
+
+                            for (BorrowingHistory& history : borrowingHistory) {
+                                if (history.title == book.title && !history.returned) {
+                                    history.returned = true;
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+            case '4': {
+                if (library.empty()) {
+                    std::cout << "No books available in the library." << std::endl;
+                } else {
+                    std::cout << "Available Books:" << std::endl;
+                    for (const Book& book : library) {
+                        if (book.available) {
+                            std::cout << "Title: " << book.title << ", Author: " << book.author << std::endl;
+                        }
+                    }
+                }
+                break;
+            }
+            case '5': {
+                if (borrowingHistory.empty()) {
+                    std::cout << "No borrowing history available." << std::endl;
+                } else {
+                    std::cout << "Borrowing History:" << std::endl;
+                    for (const BorrowingHistory& history : borrowingHistory) {
+                        std::cout << "Title: " << history.title << ", Borrower: " << history.borrower
+                                  << ", Returned: " << (history.returned ? "Yes" : "No") << std::endl;
+                    }
+                }
+                break;
+            }
+            case '6':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '6');
+
+    return 0;
+}
