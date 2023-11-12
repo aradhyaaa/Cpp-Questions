@@ -1,0 +1,98 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
+
+struct Student {
+    std::string name;
+    std::vector<int> grades;
+};
+
+int main() {
+    std::vector<Student> students;
+    char choice;
+
+    do {
+        std::cout << "Student Grading System" << std::endl;
+        std::cout << "1. Add Student" << std::endl;
+        std::cout << "2. Enter Grades" << std::endl;
+        std::cout << "3. Calculate Averages" << std::endl;
+        std::cout << "4. Display Student Information" << std::endl;
+        std::cout << "5. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                Student student;
+                std::cout << "Enter student name: ";
+                std::cin.ignore();
+                std::getline(std::cin, student.name);
+                students.push_back(student);
+                std::cout << "Student added." << std::endl;
+                break;
+            }
+            case '2': {
+                if (students.empty()) {
+                    std::cout << "No students available. Please add a student first." << std::endl;
+                } else {
+                    std::cout << "Enter Grades:" << std::endl;
+                    for (size_t i = 0; i < students.size(); ++i) {
+                        int grade;
+                        std::cout << "Enter grades for " << students[i].name << " (enter -1 to finish): ";
+                        while (std::cin >> grade && grade != -1) {
+                            students[i].grades.push_back(grade);
+                        }
+                    }
+                }
+                break;
+            }
+            case '3': {
+                if (students.empty()) {
+                    std::cout << "No students available. Please add a student first." << std::endl;
+                } else {
+                    for (size_t i = 0; i < students.size(); ++i) {
+                        if (students[i].grades.empty()) {
+                            std::cout << "No grades entered for " << students[i].name << "." << std::endl;
+                        } else {
+                            double sum = 0;
+                            for (int grade : students[i].grades) {
+                                sum += grade;
+                            }
+                            double average = sum / students[i].grades.size();
+                            std::cout << "Average for " << students[i].name << ": " << std::fixed << std::setprecision(2) << average << std::endl;
+                        }
+                    }
+                }
+                break;
+            }
+            case '4': {
+                if (students.empty()) {
+                    std::cout << "No students available. Please add a student first." << std::endl;
+                } else {
+                    std::cout << "Student Information:" << std::endl;
+                    for (size_t i = 0; i < students.size(); ++i) {
+                        std::cout << "Student Name: " << students[i].name << std::endl;
+                        if (students[i].grades.empty()) {
+                            std::cout << "No grades entered for " << students[i].name << "." << std::endl;
+                        } else {
+                            std::cout << "Grades: ";
+                            for (int grade : students[i].grades) {
+                                std::cout << grade << " ";
+                            }
+                            std::cout << std::endl;
+                        }
+                    }
+                }
+                break;
+            }
+            case '5':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '5');
+
+    return 0;
+}
