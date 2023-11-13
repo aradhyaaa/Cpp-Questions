@@ -1,0 +1,138 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+enum Priority {
+    LOW,
+    MEDIUM,
+    HIGH
+};
+
+struct Task {
+    std::string description;
+    Priority priority;
+    bool completed;
+};
+
+int main() {
+    std::vector<Task> tasks;
+    char choice;
+
+    do {
+        std::cout << "Task Tracking System" << std::endl;
+        std::cout << "1. Add Task" << std::endl;
+        std::cout << "2. Mark Task as Complete" << std::endl;
+        std::cout << "3. View Tasks by Priority" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                Task task;
+                std::cout << "Enter task description: ";
+                std::cin.ignore();
+                std::getline(std::cin, task.description);
+
+                int priorityChoice;
+                std::cout << "Enter task priority (1: Low, 2: Medium, 3: High): ";
+                std::cin >> priorityChoice;
+
+                switch (priorityChoice) {
+                    case 1:
+                        task.priority = LOW;
+                        break;
+                    case 2:
+                        task.priority = MEDIUM;
+                        break;
+                    case 3:
+                        task.priority = HIGH;
+                        break;
+                    default:
+                        std::cout << "Invalid priority. Setting to Medium by default." << std::endl;
+                        task.priority = MEDIUM;
+                        break;
+                }
+
+                task.completed = false;
+                tasks.push_back(task);
+                std::cout << "Task added." << std::endl;
+                break;
+            }
+            case '2': {
+                if (tasks.empty()) {
+                    std::cout << "No tasks available." << std::endl;
+                } else {
+                    std::cout << "Tasks:" << std::endl;
+                    for (size_t i = 0; i < tasks.size(); ++i) {
+                        std::cout << (i + 1) << ". ";
+                        std::cout << "[" << (tasks[i].completed ? "X" : " ") << "] ";
+                        std::cout << tasks[i].description << " (Priority: ";
+                        switch (tasks[i].priority) {
+                            case LOW:
+                                std::cout << "Low";
+                                break;
+                            case MEDIUM:
+                                std::cout << "Medium";
+                                break;
+                            case HIGH:
+                                std::cout << "High";
+                                break;
+                        }
+                        std::cout << ")" << std::endl;
+                    }
+
+                    int taskIndex;
+                    std::cout << "Enter the number of the task to mark as complete: ";
+                    std::cin >> taskIndex;
+
+                    if (taskIndex >= 1 && taskIndex <= tasks.size()) {
+                        tasks[taskIndex - 1].completed = true;
+                        std::cout << "Task marked as complete." << std::endl;
+                    } else {
+                        std::cout << "Invalid task number." << std::endl;
+                    }
+                }
+                break;
+            }
+            case '3': {
+                if (tasks.empty()) {
+                    std::cout << "No tasks available." << std::endl;
+                } else {
+                    std::cout << "View Tasks by Priority:" << std::endl;
+                    for (Priority priority = LOW; priority <= HIGH; priority = static_cast<Priority>(priority + 1)) {
+                        std::cout << "Priority: ";
+                        switch (priority) {
+                            case LOW:
+                                std::cout << "Low";
+                                break;
+                            case MEDIUM:
+                                std::cout << "Medium";
+                                break;
+                            case HIGH:
+                                std::cout << "High";
+                                break;
+                        }
+                        std::cout << std::endl;
+
+                        for (const Task& task : tasks) {
+                            if (task.priority == priority) {
+                                std::cout << " - ";
+                                std::cout << "[" << (task.completed ? "X" : " ") << "] ";
+                                std::cout << task.description << std::endl;
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+            case '4':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '4');
+
+    return 0;
+}
