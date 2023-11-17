@@ -1,0 +1,140 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
+
+enum ExpenseCategory {
+    FOOD,
+    TRANSPORTATION,
+    ENTERTAINMENT,
+    UTILITIES,
+    OTHER
+};
+
+struct Expense {
+    std::string description;
+    double amount;
+    ExpenseCategory category;
+};
+
+int main() {
+    std::vector<Expense> expenses;
+    char choice;
+
+    do {
+        std::cout << "Expense Tracking System" << std::endl;
+        std::cout << "1. Add Expense" << std::endl;
+        std::cout << "2. View Expenses by Category" << std::endl;
+        std::cout << "3. View Total Expenses" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                Expense expense;
+                std::cout << "Enter expense description: ";
+                std::cin.ignore();
+                std::getline(std::cin, expense.description);
+                std::cout << "Enter expense amount: $";
+                std::cin >> expense.amount;
+
+                int categoryChoice;
+                std::cout << "Choose expense category:" << std::endl;
+                std::cout << "1. Food" << std::endl;
+                std::cout << "2. Transportation" << std::endl;
+                std::cout << "3. Entertainment" << std::endl;
+                std::cout << "4. Utilities" << std::endl;
+                std::cout << "5. Other" << std::endl;
+                std::cout << "Enter category number: ";
+                std::cin >> categoryChoice;
+
+                switch (categoryChoice) {
+                    case 1:
+                        expense.category = FOOD;
+                        break;
+                    case 2:
+                        expense.category = TRANSPORTATION;
+                        break;
+                    case 3:
+                        expense.category = ENTERTAINMENT;
+                        break;
+                    case 4:
+                        expense.category = UTILITIES;
+                        break;
+                    case 5:
+                        expense.category = OTHER;
+                        break;
+                    default:
+                        std::cout << "Invalid category. Setting to Other by default." << std::endl;
+                        expense.category = OTHER;
+                        break;
+                }
+
+                expenses.push_back(expense);
+                std::cout << "Expense added." << std::endl;
+                break;
+            }
+            case '2': {
+                if (expenses.empty()) {
+                    std::cout << "No expenses available." << std::endl;
+                } else {
+                    std::cout << "View Expenses by Category:" << std::endl;
+                    for (ExpenseCategory category = FOOD; category <= OTHER; category = static_cast<ExpenseCategory>(category + 1)) {
+                        std::cout << "Category: ";
+                        switch (category) {
+                            case FOOD:
+                                std::cout << "Food";
+                                break;
+                            case TRANSPORTATION:
+                                std::cout << "Transportation";
+                                break;
+                            case ENTERTAINMENT:
+                                std::cout << "Entertainment";
+                                break;
+                            case UTILITIES:
+                                std::cout << "Utilities";
+                                break;
+                            case OTHER:
+                                std::cout << "Other";
+                                break;
+                        }
+                        std::cout << std::endl;
+
+                        for (const Expense& expense : expenses) {
+                            if (expense.category == category) {
+                                std::cout << " - ";
+                                std::cout << "Description: " << expense.description << ", Amount: $" << std::fixed << std::setprecision(2) << expense.amount << std::endl;
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+            case '3': {
+                if (expenses.empty()) {
+                    std::cout << "No expenses available." << std::endl;
+                } else {
+                    double totalExpenses = 0;
+                    std::cout << "View Total Expenses:" << std::endl;
+
+                    for (const Expense& expense : expenses) {
+                        totalExpenses += expense.amount;
+                        std::cout << " - ";
+                        std::cout << "Description: " << expense.description << ", Amount: $" << std::fixed << std::setprecision(2) << expense.amount << std::endl;
+                    }
+
+                    std::cout << "Total Expenses: $" << std::fixed << std::setprecision(2) << totalExpenses << std::endl;
+                }
+                break;
+            }
+            case '4':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '4');
+
+    return 0;
+}
