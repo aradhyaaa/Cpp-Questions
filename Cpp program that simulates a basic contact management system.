@@ -1,0 +1,106 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+struct Contact {
+    std::string name;
+    std::string phone;
+    std::string email;
+};
+
+int main() {
+    std::vector<Contact> contacts;
+    char choice;
+
+    do {
+        std::cout << "Contact Management System" << std::endl;
+        std::cout << "1. Add Contact" << std::endl;
+        std::cout << "2. View Contacts" << std::endl;
+        std::cout << "3. Search for Contact" << std::endl;
+        std::cout << "4. Delete Contact" << std::endl;
+        std::cout << "5. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                Contact contact;
+                std::cout << "Enter contact name: ";
+                std::cin.ignore();
+                std::getline(std::cin, contact.name);
+                std::cout << "Enter contact phone number: ";
+                std::cin >> contact.phone;
+                std::cout << "Enter contact email address: ";
+                std::cin >> contact.email;
+                contacts.push_back(contact);
+                std::cout << "Contact added." << std::endl;
+                break;
+            }
+            case '2': {
+                if (contacts.empty()) {
+                    std::cout << "No contacts available." << std::endl;
+                } else {
+                    std::cout << "View Contacts:" << std::endl;
+                    for (const Contact& contact : contacts) {
+                        std::cout << "Name: " << contact.name << ", Phone: " << contact.phone << ", Email: " << contact.email << std::endl;
+                    }
+                }
+                break;
+            }
+            case '3': {
+                if (contacts.empty()) {
+                    std::cout << "No contacts available." << std::endl;
+                } else {
+                    std::string searchName;
+                    std::cout << "Enter contact name to search: ";
+                    std::cin.ignore();
+                    std::getline(std::cin, searchName);
+
+                    bool found = false;
+                    for (const Contact& contact : contacts) {
+                        if (contact.name == searchName) {
+                            std::cout << "Contact found:" << std::endl;
+                            std::cout << "Name: " << contact.name << ", Phone: " << contact.phone << ", Email: " << contact.email << std::endl;
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found) {
+                        std::cout << "Contact not found." << std::endl;
+                    }
+                }
+                break;
+            }
+            case '4': {
+                if (contacts.empty()) {
+                    std::cout << "No contacts available." << std::endl;
+                } else {
+                    std::string deleteName;
+                    std::cout << "Enter contact name to delete: ";
+                    std::cin.ignore();
+                    std::getline(std::cin, deleteName);
+
+                    auto it = std::remove_if(contacts.begin(), contacts.end(), [deleteName](const Contact& contact) {
+                        return contact.name == deleteName;
+                    });
+
+                    if (it != contacts.end()) {
+                        contacts.erase(it, contacts.end());
+                        std::cout << "Contact deleted." << std::endl;
+                    } else {
+                        std::cout << "Contact not found." << std::endl;
+                    }
+                }
+                break;
+            }
+            case '5':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '5');
+
+    return 0;
+}
