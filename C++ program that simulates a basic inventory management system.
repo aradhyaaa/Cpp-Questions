@@ -1,0 +1,136 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+struct Product {
+    std::string name;
+    double price;
+    int quantity;
+};
+
+int main() {
+    std::vector<Product> inventory;
+    char choice;
+
+    do {
+        std::cout << "Inventory Management System" << std::endl;
+        std::cout << "1. Add Product" << std::endl;
+        std::cout << "2. View Inventory" << std::endl;
+        std::cout << "3. Search for Product" << std::endl;
+        std::cout << "4. Update Product" << std::endl;
+        std::cout << "5. Remove Product" << std::endl;
+        std::cout << "6. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                Product product;
+                std::cout << "Enter product name: ";
+                std::cin.ignore();
+                std::getline(std::cin, product.name);
+                std::cout << "Enter product price: $";
+                std::cin >> product.price;
+                std::cout << "Enter product quantity: ";
+                std::cin >> product.quantity;
+                inventory.push_back(product);
+                std::cout << "Product added." << std::endl;
+                break;
+            }
+            case '2': {
+                if (inventory.empty()) {
+                    std::cout << "No products in the inventory." << std::endl;
+                } else {
+                    std::cout << "View Inventory:" << std::endl;
+                    for (const Product& product : inventory) {
+                        std::cout << "Name: " << product.name << ", Price: $" << product.price << ", Quantity: " << product.quantity << std::endl;
+                    }
+                }
+                break;
+            }
+            case '3': {
+                if (inventory.empty()) {
+                    std::cout << "No products in the inventory." << std::endl;
+                } else {
+                    std::string searchName;
+                    std::cout << "Enter product name to search: ";
+                    std::cin.ignore();
+                    std::getline(std::cin, searchName);
+
+                    bool found = false;
+                    for (const Product& product : inventory) {
+                        if (product.name == searchName) {
+                            std::cout << "Product found:" << std::endl;
+                            std::cout << "Name: " << product.name << ", Price: $" << product.price << ", Quantity: " << product.quantity << std::endl;
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found) {
+                        std::cout << "Product not found." << std::endl;
+                    }
+                }
+                break;
+            }
+            case '4': {
+                if (inventory.empty()) {
+                    std::cout << "No products in the inventory." << std::endl;
+                } else {
+                    std::string updateName;
+                    std::cout << "Enter product name to update: ";
+                    std::cin.ignore();
+                    std::getline(std::cin, updateName);
+
+                    bool found = false;
+                    for (Product& product : inventory) {
+                        if (product.name == updateName) {
+                            std::cout << "Enter updated product price: $";
+                            std::cin >> product.price;
+                            std::cout << "Enter updated product quantity: ";
+                            std::cin >> product.quantity;
+                            std::cout << "Product updated." << std::endl;
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found) {
+                        std::cout << "Product not found." << std::endl;
+                    }
+                }
+                break;
+            }
+            case '5': {
+                if (inventory.empty()) {
+                    std::cout << "No products in the inventory." << std::endl;
+                } else {
+                    std::string removeName;
+                    std::cout << "Enter product name to remove: ";
+                    std::cin.ignore();
+                    std::getline(std::cin, removeName);
+
+                    auto it = std::remove_if(inventory.begin(), inventory.end(),
+                                             [removeName](const Product& product) {
+                                                 return product.name == removeName;
+                                             });
+
+                    if (it != inventory.end()) {
+                        inventory.erase(it, inventory.end());
+                        std::cout << "Product removed." << std::endl;
+                    } else {
+                        std::cout << "Product not found." << std::endl;
+                    }
+                }
+                break;
+            }
+            case '6':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '6');
+
+    return 0;
+}
