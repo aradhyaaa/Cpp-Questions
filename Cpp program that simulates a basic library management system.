@@ -1,0 +1,120 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
+
+struct Book {
+    std::string title;
+    std::string author;
+    bool available;
+};
+
+void viewCatalog(const std::vector<Book>& library) {
+    if (library.empty()) {
+        std::cout << "Library catalog is empty." << std::endl;
+    } else {
+        std::cout << "Library Catalog:" << std::endl;
+        for (const Book& book : library) {
+            std::cout << "Title: " << book.title << ", Author: " << book.author;
+            if (book.available) {
+                std::cout << " (Available)";
+            } else {
+                std::cout << " (Checked Out)";
+            }
+            std::cout << std::endl;
+        }
+    }
+}
+
+void borrowBook(std::vector<Book>& library, const std::string& title) {
+    auto it = std::find_if(library.begin(), library.end(),
+                           [title](const Book& book) {
+                               return book.title == title && book.available;
+                           });
+
+    if (it != library.end()) {
+        it->available = false;
+        std::cout << "Book '" << title << "' borrowed successfully." << std::endl;
+    } else {
+        std::cout << "Book '" << title << "' is either not available or does not exist." << std::endl;
+    }
+}
+
+void returnBook(std::vector<Book>& library, const std::string& title) {
+    auto it = std::find_if(library.begin(), library.end(),
+                           [title](const Book& book) {
+                               return book.title == title && !book.available;
+                           });
+
+    if (it != library.end()) {
+        it->available = true;
+        std::cout << "Book '" << title << "' returned successfully." << std::endl;
+    } else {
+        std::cout << "Book '" << title << "' is either already available or does not exist." << std::endl;
+    }
+}
+
+int main() {
+    std::vector<Book> library;
+    char choice;
+
+    do {
+        std::cout << "Library Management System" << std::endl;
+        std::cout << "1. Add Book" << std::endl;
+        std::cout << "2. View Catalog" << std::endl;
+        std::cout << "3. Borrow Book" << std::endl;
+        std::cout << "4. Return Book" << std::endl;
+        std::cout << "5. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                Book book;
+                std::cout << "Enter book title: ";
+                std::cin.ignore();
+                std::getline(std::cin, book.title);
+                std::cout << "Enter author: ";
+                std::getline(std::cin, book.author);
+                book.available = true;
+                library.push_back(book);
+                std::cout << "Book added to the library." << std::endl;
+                break;
+            }
+            case '2':
+                viewCatalog(library);
+                break;
+            case '3': {
+                if (library.empty()) {
+                    std::cout << "Library is empty. Add books before borrowing." << std::endl;
+                } else {
+                    std::string title;
+                    std::cout << "Enter the title of the book to borrow: ";
+                    std::cin.ignore();
+                    std::getline(std::cin, title);
+                    borrowBook(library, title);
+                }
+                break;
+            }
+            case '4': {
+                if (library.empty()) {
+                    std::cout << "Library is empty. Add books before returning." << std::endl;
+                } else {
+                    std::string title;
+                    std::cout << "Enter the title of the book to return: ";
+                    std::cin.ignore();
+                    std::getline(std::cin, title);
+                    returnBook(library, title);
+                }
+                break;
+            }
+            case '5':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '5');
+
+    return 0;
+}
