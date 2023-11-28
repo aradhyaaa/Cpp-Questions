@@ -1,0 +1,78 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
+
+struct Employee {
+    std::string name;
+    double hourlyRate;
+    int hoursWorked;
+};
+
+void viewEmployeeDetails(const Employee& employee) {
+    std::cout << "Employee Details:" << std::endl;
+    std::cout << "Name: " << employee.name << std::endl;
+    std::cout << "Hourly Rate: $" << std::fixed << std::setprecision(2) << employee.hourlyRate << std::endl;
+    std::cout << "Hours Worked: " << employee.hoursWorked << " hours" << std::endl;
+    std::cout << "Total Salary: $" << std::fixed << std::setprecision(2) << (employee.hourlyRate * employee.hoursWorked) << std::endl;
+}
+
+int main() {
+    std::vector<Employee> employees;
+    char choice;
+
+    do {
+        std::cout << "Employee Management System" << std::endl;
+        std::cout << "1. Add Employee" << std::endl;
+        std::cout << "2. View Employee Details" << std::endl;
+        std::cout << "3. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                Employee employee;
+                std::cout << "Enter employee name: ";
+                std::cin.ignore();
+                std::getline(std::cin, employee.name);
+                std::cout << "Enter hourly rate: $";
+                std::cin >> employee.hourlyRate;
+                std::cout << "Enter hours worked: ";
+                std::cin >> employee.hoursWorked;
+
+                employees.push_back(employee);
+                std::cout << "Employee added." << std::endl;
+                break;
+            }
+            case '2': {
+                if (employees.empty()) {
+                    std::cout << "No employees available. Add employees before viewing details." << std::endl;
+                } else {
+                    std::string employeeName;
+                    std::cout << "Enter the name of the employee: ";
+                    std::cin.ignore();
+                    std::getline(std::cin, employeeName);
+
+                    auto it = std::find_if(employees.begin(), employees.end(),
+                                           [employeeName](const Employee& employee) {
+                                               return employee.name == employeeName;
+                                           });
+
+                    if (it != employees.end()) {
+                        viewEmployeeDetails(*it);
+                    } else {
+                        std::cout << "Employee not found." << std::endl;
+                    }
+                }
+                break;
+            }
+            case '3':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '3');
+
+    return 0;
+}
