@@ -1,0 +1,89 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
+
+struct Product {
+    std::string name;
+    double price;
+};
+
+struct CartItem {
+    Product product;
+    int quantity;
+};
+
+void viewCart(const std::vector<CartItem>& cart) {
+    if (cart.empty()) {
+        std::cout << "Your cart is empty." << std::endl;
+    } else {
+        std::cout << "Shopping Cart:" << std::endl;
+        for (const CartItem& item : cart) {
+            std::cout << "Product: " << item.product.name << ", Price: $" << std::fixed << std::setprecision(2) << item.product.price;
+            std::cout << ", Quantity: " << item.quantity << ", Subtotal: $" << std::fixed << std::setprecision(2) << (item.product.price * item.quantity) << std::endl;
+        }
+
+        // Calculate and display total cost
+        double totalCost = 0;
+        for (const CartItem& item : cart) {
+            totalCost += item.product.price * item.quantity;
+        }
+
+        std::cout << "Total Cost: $" << std::fixed << std::setprecision(2) << totalCost << std::endl;
+    }
+}
+
+int main() {
+    std::vector<Product> availableProducts = {{"Laptop", 999.99}, {"Headphones", 49.99}, {"Smartphone", 699.99}, {"Tablet", 299.99}};
+    std::vector<CartItem> shoppingCart;
+    char choice;
+
+    do {
+        std::cout << "Shopping Cart System" << std::endl;
+        std::cout << "1. Add Product to Cart" << std::endl;
+        std::cout << "2. View Cart" << std::endl;
+        std::cout << "3. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                if (availableProducts.empty()) {
+                    std::cout << "No products available. Add products before adding to the cart." << std::endl;
+                } else {
+                    int productIndex;
+                    std::cout << "Available Products:" << std::endl;
+                    for (size_t i = 0; i < availableProducts.size(); ++i) {
+                        std::cout << (i + 1) << ". " << availableProducts[i].name << " - $" << std::fixed << std::setprecision(2) << availableProducts[i].price << std::endl;
+                    }
+
+                    std::cout << "Enter the number of the product to add to the cart: ";
+                    std::cin >> productIndex;
+
+                    if (productIndex >= 1 && productIndex <= static_cast<int>(availableProducts.size())) {
+                        int quantity;
+                        std::cout << "Enter quantity: ";
+                        std::cin >> quantity;
+
+                        CartItem item{availableProducts[productIndex - 1], quantity};
+                        shoppingCart.push_back(item);
+                        std::cout << "Product added to the cart." << std::endl;
+                    } else {
+                        std::cout << "Invalid product number." << std::endl;
+                    }
+                }
+                break;
+            }
+            case '2':
+                viewCart(shoppingCart);
+                break;
+            case '3':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '3');
+
+    return 0;
+}
