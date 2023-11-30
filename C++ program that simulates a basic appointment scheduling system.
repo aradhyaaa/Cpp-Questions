@@ -1,0 +1,92 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
+
+struct Appointment {
+    std::string date;
+    std::string time;
+    std::string description;
+};
+
+void viewAppointments(const std::vector<Appointment>& appointments) {
+    if (appointments.empty()) {
+        std::cout << "No appointments scheduled." << std::endl;
+    } else {
+        std::cout << "Scheduled Appointments:" << std::endl;
+        for (const Appointment& appointment : appointments) {
+            std::cout << "Date: " << appointment.date << ", Time: " << appointment.time << ", Description: " << appointment.description << std::endl;
+        }
+    }
+}
+
+void cancelAppointment(std::vector<Appointment>& appointments, const std::string& date, const std::string& time) {
+    auto it = std::remove_if(appointments.begin(), appointments.end(),
+                             [date, time](const Appointment& appointment) {
+                                 return appointment.date == date && appointment.time == time;
+                             });
+
+    if (it != appointments.end()) {
+        appointments.erase(it, appointments.end());
+        std::cout << "Appointment canceled." << std::endl;
+    } else {
+        std::cout << "Appointment not found." << std::endl;
+    }
+}
+
+int main() {
+    std::vector<Appointment> scheduledAppointments;
+    char choice;
+
+    do {
+        std::cout << "Appointment Scheduling System" << std::endl;
+        std::cout << "1. Schedule Appointment" << std::endl;
+        std::cout << "2. View Appointments" << std::endl;
+        std::cout << "3. Cancel Appointment" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                Appointment appointment;
+                std::cout << "Enter date (MM/DD/YYYY): ";
+                std::cin >> appointment.date;
+                std::cout << "Enter time (HH:MM AM/PM): ";
+                std::cin.ignore();
+                std::getline(std::cin, appointment.time);
+                std::cout << "Enter appointment description: ";
+                std::getline(std::cin, appointment.description);
+
+                scheduledAppointments.push_back(appointment);
+                std::cout << "Appointment scheduled." << std::endl;
+                break;
+            }
+            case '2':
+                viewAppointments(scheduledAppointments);
+                break;
+            case '3': {
+                if (scheduledAppointments.empty()) {
+                    std::cout << "No appointments scheduled. Schedule appointments before canceling." << std::endl;
+                } else {
+                    std::string cancelDate, cancelTime;
+                    std::cout << "Enter date of the appointment to cancel (MM/DD/YYYY): ";
+                    std::cin >> cancelDate;
+                    std::cout << "Enter time of the appointment to cancel (HH:MM AM/PM): ";
+                    std::cin.ignore();
+                    std::getline(std::cin, cancelTime);
+
+                    cancelAppointment(scheduledAppointments, cancelDate, cancelTime);
+                }
+                break;
+            }
+            case '4':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '4');
+
+    return 0;
+}
