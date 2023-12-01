@@ -1,0 +1,161 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+struct Question {
+    std::string text;
+    std::vector<std::string> options;
+    int correctOption;
+};
+
+struct Quiz {
+    std::string title;
+    std::vector<Question> questions;
+};
+
+struct QuizResult {
+    std::string quizTitle;
+    int score;
+};
+
+void viewQuizzes(const std::vector<Quiz>& quizzes) {
+    if (quizzes.empty()) {
+        std::cout << "No quizzes available." << std::endl;
+    } else {
+        std::cout << "Available Quizzes:" << std::endl;
+        for (const Quiz& quiz : quizzes) {
+            std::cout << "- " << quiz.title << std::endl;
+        }
+    }
+}
+
+void takeQuiz(const Quiz& quiz, std::vector<QuizResult>& quizResults) {
+    if (quiz.questions.empty()) {
+        std::cout << "This quiz has no questions. Add questions before taking it." << std::endl;
+        return;
+    }
+
+    int score = 0;
+
+    for (const Question& question : quiz.questions) {
+        std::cout << question.text << std::endl;
+        for (size_t i = 0; i < question.options.size(); ++i) {
+            std::cout << (i + 1) << ". " << question.options[i] << std::endl;
+        }
+
+        int userChoice;
+        std::cout << "Enter your choice (1-" << question.options.size() << "): ";
+        std::cin >> userChoice;
+
+        if (userChoice >= 1 && userChoice <= static_cast<int>(question.options.size()) && userChoice == question.correctOption) {
+            ++score;
+        }
+    }
+
+    QuizResult result{quiz.title, score};
+    quizResults.push_back(result);
+
+    std::cout << "Quiz completed. Your score: " << score << "/" << quiz.questions.size() << std::endl;
+}
+
+int main() {
+    std::vector<Quiz> quizzes;
+    std::vector<QuizResult> quizResults;
+    char choice;
+
+    do {
+        std::cout << "Quiz System" << std::endl;
+        std::cout << "1. Create Quiz" << std::endl;
+        std::cout << "2. View Quizzes" << std::endl;
+        std::cout << "3. Take Quiz" << std::endl;
+        std::cout << "4. View Results" << std::endl;
+        std::cout << "5. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                Quiz quiz;
+                std::cout << "Enter quiz title: ";
+                std::cin.ignore();
+                std::getline(std::cin, quiz.title);
+
+                int numQuestions;
+                std::cout << "Enter the number of questions: ";
+                std::cin >> numQuestions;
+
+                for (int i = 0; i < numQuestions; ++i) {
+                    Question question;
+                    std::cout << "Enter question text: ";
+                    std::cin.ignore();
+                    std::getline(std::cin, question.text);
+
+                    int numOptions;
+                    std::cout << "Enter the number of options: ";
+                    std::cin >> numOptions;
+
+                    for (int j = 0; j < numOptions; ++j) {
+                        std::string option;
+                        std::cout << "Enter option " << (j + 1) << ": ";
+                        std::cin.ignore();
+                        std::getline(std::cin, option);
+                        question.options.push_back(option);
+                    }
+
+                    std::cout << "Enter the correct option (1-" << numOptions << "): ";
+                    std::cin >> question.correctOption;
+
+                    quiz.questions.push_back(question);
+                }
+
+                quizzes.push_back(quiz);
+                std::cout << "Quiz created." << std::endl;
+                break;
+            }
+            case '2':
+                viewQuizzes(quizzes);
+                break;
+            case '3': {
+                if (quizzes.empty()) {
+                    std::cout << "No quizzes available. Create quizzes before taking them." << std::endl;
+                } else {
+                    std::string quizTitle;
+                    std::cout << "Enter the title of the quiz to take: ";
+                    std::cin.ignore();
+                    std::getline(std::cin, quizTitle);
+
+                    auto it = std::find_if(quizzes.begin(), quizzes.end(),
+                                           [quizTitle](const Quiz& quiz) {
+                                               return quiz.title == quizTitle;
+                                           });
+
+                    if (it != quizzes.end()) {
+                        takeQuiz(*it, quizResults);
+                    } else {
+                        std::cout << "Quiz not found." << std::endl;
+                    }
+                }
+                break;
+            }
+            case '4': {
+                if (quizResults.empty()) {
+                    std::cout << "No quiz results available." << std::endl;
+                } else {
+                    std::cout << "Quiz Results:" << std::endl;
+                    for (const QuizResult& result : quizResults) {
+                        std::cout << "Quiz: " << result.quizTitle << ", Score: " << result.score << "/" << quizzes.size() << std::endl;
+                    }
+                }
+                break;
+            }
+            case '5':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '5');
+
+    return 0;
+}
