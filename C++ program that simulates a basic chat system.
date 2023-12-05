@@ -1,0 +1,71 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+struct Message {
+    std::string sender;
+    std::string recipient;
+    std::string content;
+};
+
+void viewMessages(const std::vector<Message>& messages, const std::string& user) {
+    std::cout << "Messages for " << user << ":" << std::endl;
+    for (const Message& message : messages) {
+        if (message.recipient == user || message.sender == user) {
+            std::cout << "(" << message.sender << " to " << message.recipient << "): " << message.content << std::endl;
+        }
+    }
+}
+
+void sendMessage(std::vector<Message>& messages, const std::string& sender, const std::string& recipient, const std::string& content) {
+    Message message{sender, recipient, content};
+    messages.push_back(message);
+    std::cout << "Message sent from " << sender << " to " << recipient << ": " << content << std::endl;
+}
+
+int main() {
+    std::vector<Message> chatMessages;
+    char choice;
+
+    do {
+        std::cout << "Chat System" << std::endl;
+        std::cout << "1. Send Message" << std::endl;
+        std::cout << "2. View Messages" << std::endl;
+        std::cout << "3. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                std::string sender, recipient, content;
+                std::cout << "Enter sender username: ";
+                std::cin.ignore();
+                std::getline(std::cin, sender);
+                std::cout << "Enter recipient username: ";
+                std::getline(std::cin, recipient);
+                std::cout << "Enter message content: ";
+                std::getline(std::cin, content);
+
+                sendMessage(chatMessages, sender, recipient, content);
+                break;
+            }
+            case '2': {
+                std::string user;
+                std::cout << "Enter your username: ";
+                std::cin.ignore();
+                std::getline(std::cin, user);
+
+                viewMessages(chatMessages, user);
+                break;
+            }
+            case '3':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '3');
+
+    return 0;
+}
