@@ -1,0 +1,89 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
+
+struct Expense {
+    std::string category;
+    double amount;
+};
+
+void viewExpenses(const std::vector<Expense>& expenses) {
+    if (expenses.empty()) {
+        std::cout << "Expense list is empty." << std::endl;
+    } else {
+        std::cout << "Expense List:" << std::endl;
+        for (const Expense& expense : expenses) {
+            std::cout << "Category: " << expense.category << ", Amount: $" << std::fixed << std::setprecision(2) << expense.amount << std::endl;
+        }
+    }
+}
+
+void addExpense(std::vector<Expense>& expenses, const std::string& category, double amount) {
+    Expense expense{category, amount};
+    expenses.push_back(expense);
+    std::cout << "Expense added: Category - " << category << ", Amount - $" << std::fixed << std::setprecision(2) << amount << std::endl;
+}
+
+double calculateTotalExpense(const std::vector<Expense>& expenses) {
+    double totalExpense = 0.0;
+    for (const Expense& expense : expenses) {
+        totalExpense += expense.amount;
+    }
+    return totalExpense;
+}
+
+void viewExpenseReport(const std::vector<Expense>& expenses) {
+    if (expenses.empty()) {
+        std::cout << "Expense list is empty. Add expenses before generating a report." << std::endl;
+    } else {
+        double totalExpense = calculateTotalExpense(expenses);
+        std::cout << "Expense Report:" << std::endl;
+        std::cout << "Total Expense: $" << std::fixed << std::setprecision(2) << totalExpense << std::endl;
+    }
+}
+
+int main() {
+    std::vector<Expense> expenseList;
+    char choice;
+
+    do {
+        std::cout << "Expense Tracking System" << std::endl;
+        std::cout << "1. Add Expense" << std::endl;
+        std::cout << "2. View Expenses" << std::endl;
+        std::cout << "3. View Expense Report" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                std::string category;
+                double amount;
+
+                std::cout << "Enter expense category: ";
+                std::cin.ignore();
+                std::getline(std::cin, category);
+
+                std::cout << "Enter expense amount: $";
+                std::cin >> amount;
+
+                addExpense(expenseList, category, amount);
+                break;
+            }
+            case '2':
+                viewExpenses(expenseList);
+                break;
+            case '3':
+                viewExpenseReport(expenseList);
+                break;
+            case '4':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '4');
+
+    return 0;
+}
