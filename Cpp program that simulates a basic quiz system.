@@ -1,0 +1,107 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+struct Question {
+    std::string text;
+    std::vector<std::string> options;
+    int correctOption;
+};
+
+struct QuizResult {
+    std::string userName;
+    int score;
+};
+
+void viewQuestions(const std::vector<Question>& questions) {
+    if (questions.empty()) {
+        std::cout << "Question bank is empty." << std::endl;
+    } else {
+        std::cout << "Question Bank:" << std::endl;
+        for (size_t i = 0; i < questions.size(); ++i) {
+            std::cout << (i + 1) << ". " << questions[i].text << std::endl;
+            for (size_t j = 0; j < questions[i].options.size(); ++j) {
+                std::cout << "   " << (j + 1) << ". " << questions[i].options[j] << std::endl;
+            }
+        }
+    }
+}
+
+void addQuestion(std::vector<Question>& questions, const std::string& text, const std::vector<std::string>& options, int correctOption) {
+    Question question{text, options, correctOption};
+    questions.push_back(question);
+    std::cout << "Question added to the bank." << std::endl;
+}
+
+void takeQuiz(const std::vector<Question>& questions, const std::string& userName, std::vector<QuizResult>& quizResults) {
+    if (questions.empty()) {
+        std::cout << "Question bank is empty. Add questions before taking a quiz." << std::endl;
+    } else {
+        int score = 0;
+        std::cout << "Quiz for " << userName << ":" << std::endl;
+
+        for (const Question& question : questions) {
+            int userAnswer;
+            std::cout << question.text << std::endl;
+            for (size_t i = 0; i < question.options.size(); ++i) {
+                std::cout << "   " << (i + 1) << ". " << question.options[i] << std::endl;
+            }
+            std::cout << "Your answer: ";
+            std::cin >> userAnswer;
+
+            if (userAnswer == question.correctOption) {
+                ++score;
+            }
+        }
+
+        QuizResult result{userName, score};
+        quizResults.push_back(result);
+        std::cout << "Quiz completed. Score: " << score << " out of " << questions.size() << std::endl;
+    }
+}
+
+void viewQuizResults(const std::vector<QuizResult>& quizResults) {
+    if (quizResults.empty()) {
+        std::cout << "No quiz results recorded." << std::endl;
+    } else {
+        std::cout << "Quiz Results:" << std::endl;
+        for (const QuizResult& result : quizResults) {
+            std::cout << "User: " << result.userName << ", Score: " << result.score << std::endl;
+        }
+    }
+}
+
+int main() {
+    std::vector<Question> questionBank;
+    std::vector<QuizResult> quizResults;
+    char choice;
+
+    do {
+        std::cout << "Quiz System" << std::endl;
+        std::cout << "1. Add Question" << std::endl;
+        std::cout << "2. View Questions" << std::endl;
+        std::cout << "3. Take Quiz" << std::endl;
+        std::cout << "4. View Quiz Results" << std::endl;
+        std::cout << "5. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                std::string text;
+                std::vector<std::string> options;
+                int correctOption;
+
+                std::cin.ignore();
+                std::cout << "Enter the question: ";
+                std::getline(std::cin, text);
+
+                int numOptions;
+                std::cout << "Enter the number of options: ";
+                std::cin >> numOptions;
+
+                for (int i = 0; i < numOptions; ++i) {
+                    std::string option;
+                    std::cout << "Enter option " << (i + 1) << ": ";
+         
