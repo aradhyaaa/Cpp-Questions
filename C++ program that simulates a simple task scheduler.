@@ -1,0 +1,83 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+struct Task {
+    std::string description;
+    bool completed;
+};
+
+void viewTasks(const std::vector<Task>& tasks) {
+    if (tasks.empty()) {
+        std::cout << "Task list is empty." << std::endl;
+    } else {
+        std::cout << "Task List:" << std::endl;
+        for (size_t i = 0; i < tasks.size(); ++i) {
+            std::cout << (i + 1) << ". " << (tasks[i].completed ? "[X] " : "[ ] ") << tasks[i].description << std::endl;
+        }
+    }
+}
+
+void addTask(std::vector<Task>& tasks, const std::string& description) {
+    Task task{description, false};
+    tasks.push_back(task);
+    std::cout << "Task added: " << description << std::endl;
+}
+
+void completeTask(std::vector<Task>& tasks, size_t taskIndex) {
+    if (taskIndex >= 1 && taskIndex <= tasks.size()) {
+        tasks[taskIndex - 1].completed = true;
+        std::cout << "Task completed: " << tasks[taskIndex - 1].description << std::endl;
+    } else {
+        std::cout << "Invalid task number." << std::endl;
+    }
+}
+
+int main() {
+    std::vector<Task> taskList;
+    char choice;
+
+    do {
+        std::cout << "Task Scheduler" << std::endl;
+        std::cout << "1. Add Task" << std::endl;
+        std::cout << "2. View Tasks" << std::endl;
+        std::cout << "3. Complete Task" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                std::string description;
+                std::cout << "Enter task description: ";
+                std::cin.ignore();
+                std::getline(std::cin, description);
+
+                addTask(taskList, description);
+                break;
+            }
+            case '2':
+                viewTasks(taskList);
+                break;
+            case '3': {
+                if (taskList.empty()) {
+                    std::cout << "Task list is empty. Add tasks before completing." << std::endl;
+                } else {
+                    size_t taskIndex;
+                    std::cout << "Enter the number of the task to complete: ";
+                    std::cin >> taskIndex;
+
+                    completeTask(taskList, taskIndex);
+                }
+                break;
+            }
+            case '4':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '4');
+
+    return 0;
+}
