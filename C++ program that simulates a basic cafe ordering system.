@@ -1,0 +1,143 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
+
+struct MenuItem {
+    std::string name;
+    double price;
+};
+
+struct OrderItem {
+    std::string name;
+    int quantity;
+};
+
+void viewMenu(const std::vector<MenuItem>& menu) {
+    if (menu.empty()) {
+        std::cout << "Menu is empty." << std::endl;
+    } else {
+        std::cout << "Cafe Menu:" << std::endl;
+        for (const MenuItem& item : menu) {
+            std::cout << item.name << " - $" << std::fixed << std::setprecision(2) << item.price << std::endl;
+        }
+    }
+}
+
+void addMenuItem(std::vector<MenuItem>& menu, const std::string& name, double price) {
+    MenuItem item{name, price};
+    menu.push_back(item);
+    std::cout << "Menu item added: " << name << " - $" << std::fixed << std::setprecision(2) << price << std::endl;
+}
+
+void placeOrder(const std::vector<MenuItem>& menu, std::vector<OrderItem>& order) {
+    if (menu.empty()) {
+        std::cout << "Menu is empty. Add items to the menu before placing an order." << std::endl;
+    } else {
+        std::cout << "Place an Order:" << std::endl;
+
+        char addMore;
+        do {
+            std::string itemName;
+            int quantity;
+
+            std::cout << "Enter item name from the menu: ";
+            std::cin.ignore();
+            std::getline(std::cin, itemName);
+
+            auto it = std::find_if(menu.begin(), menu.end(),
+                                   [itemName](const MenuItem& item) {
+                                       return item.name == itemName;
+                                   });
+
+            if (it != menu.end()) {
+                std::cout << "Enter quantity: ";
+                std::cin >> quantity;
+
+                OrderItem orderItem{itemName, quantity};
+                order.push_back(orderItem);
+                std::cout << "Item added to the order." << std::endl;
+            } else {
+                std::cout << "Invalid item name. Please choose from the menu." << std::endl;
+            }
+
+            std::cout << "Add more items to the order? (y/n): ";
+            std::cin >> addMore;
+
+        } while (addMore == 'y' || addMore == 'Y');
+    }
+}
+
+void viewOrderSummary(const std::vector<MenuItem>& menu, const std::vector<OrderItem>& order) {
+    if (order.empty()) {
+        std::cout << "Order is empty. Add items to the order before viewing the summary." << std::endl;
+    } else {
+        std::cout << "Order Summary:" << std::endl;
+        double totalAmount = 0.0;
+
+        for (const OrderItem& orderItem : order) {
+            auto it = std::find_if(menu.begin(), menu.end(),
+                                   [orderItem](const MenuItem& item) {
+                                       return item.name == orderItem.name;
+                                   });
+
+            if (it != menu.end()) {
+                double itemTotal = orderItem.quantity * it->price;
+                std::cout << orderItem.name << " x" << orderItem.quantity << " - $" << std::fixed << std::setprecision(2) << itemTotal << std::endl;
+                totalAmount += itemTotal;
+            }
+        }
+
+        std::cout << "Total Amount: $" << std::fixed << std::setprecision(2) << totalAmount << std::endl;
+    }
+}
+
+int main() {
+    std::vector<MenuItem> cafeMenu;
+    std::vector<OrderItem> customerOrder;
+    char choice;
+
+    do {
+        std::cout << "Cafe Ordering System" << std::endl;
+        std::cout << "1. View Menu" << std::endl;
+        std::cout << "2. Add Menu Item" << std::endl;
+        std::cout << "3. Place Order" << std::endl;
+        std::cout << "4. View Order Summary" << std::endl;
+        std::cout << "5. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1':
+                viewMenu(cafeMenu);
+                break;
+            case '2': {
+                std::string itemName;
+                double itemPrice;
+
+                std::cin.ignore();
+                std::cout << "Enter item name: ";
+                std::getline(std::cin, itemName);
+
+                std::cout << "Enter item price: $";
+                std::cin >> itemPrice;
+
+                addMenuItem(cafeMenu, itemName, itemPrice);
+                break;
+            }
+            case '3':
+                placeOrder(cafeMenu, customerOrder);
+                break;
+            case '4':
+                viewOrderSummary(cafeMenu, customerOrder);
+                break;
+            case '5':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '5');
+
+    return 0;
+}
