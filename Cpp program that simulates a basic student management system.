@@ -1,0 +1,91 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
+
+struct Student {
+    std::string name;
+    int age;
+    double grade;
+};
+
+void viewStudents(const std::vector<Student>& students) {
+    if (students.empty()) {
+        std::cout << "Student list is empty." << std::endl;
+    } else {
+        std::cout << "Student List:" << std::endl;
+        for (const Student& student : students) {
+            std::cout << "Name: " << student.name << ", Age: " << student.age << ", Grade: " << std::fixed << std::setprecision(2) << student.grade << std::endl;
+        }
+    }
+}
+
+void addStudent(std::vector<Student>& students, const std::string& name, int age, double grade) {
+    Student student{name, age, grade};
+    students.push_back(student);
+    std::cout << "Student added: " << name << ", Age: " << age << ", Grade: " << std::fixed << std::setprecision(2) << grade << std::endl;
+}
+
+double calculateAverageGrade(const std::vector<Student>& students) {
+    if (students.empty()) {
+        return 0.0;
+    }
+
+    double totalGrade = 0.0;
+    for (const Student& student : students) {
+        totalGrade += student.grade;
+    }
+
+    return totalGrade / students.size();
+}
+
+int main() {
+    std::vector<Student> studentList;
+    char choice;
+
+    do {
+        std::cout << "Student Management System" << std::endl;
+        std::cout << "1. Add Student" << std::endl;
+        std::cout << "2. View Students" << std::endl;
+        std::cout << "3. Calculate Average Grade" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                std::string name;
+                int age;
+                double grade;
+
+                std::cin.ignore();
+                std::cout << "Enter student name: ";
+                std::getline(std::cin, name);
+
+                std::cout << "Enter student age: ";
+                std::cin >> age;
+
+                std::cout << "Enter student grade: ";
+                std::cin >> grade;
+
+                addStudent(studentList, name, age, grade);
+                break;
+            }
+            case '2':
+                viewStudents(studentList);
+                break;
+            case '3': {
+                double averageGrade = calculateAverageGrade(studentList);
+                std::cout << "Average Grade: " << std::fixed << std::setprecision(2) << averageGrade << std::endl;
+                break;
+            }
+            case '4':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '4');
+
+    return 0;
+}
