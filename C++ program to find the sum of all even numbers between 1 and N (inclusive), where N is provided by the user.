@@ -1,0 +1,27 @@
+#include <iostream>
+
+int main() {
+    int N;
+    
+    // Get user input
+    std::cout << "Enter a positive integer (N): ";
+    std::cin >> N;
+
+    // Validate user input
+    if (N <= 0) {
+        std::cerr << "Please enter a positive integer." << std::endl;
+        return 1; // Exit with an error code
+    }
+
+    int sum = 0;
+
+    // Calculate the sum of even numbers
+    for (int i = 2; i <= N; i += 2) {
+        sum += i;
+    }
+
+    // Display the result
+    std::cout << "Sum of even numbers between 1 and " << N << ": " << sum << std::endl;
+
+    return 0; // Exit successfully
+}
