@@ -1,0 +1,46 @@
+#include <iostream>
+#include <string>
+
+struct Question {
+    std::string questionText;
+    std::string options[4];
+    int correctOption;
+};
+
+void askQuestion(const Question& q) {
+    // Display the question and options
+    std::cout << q.questionText << std::endl;
+    for (int i = 0; i < 4; ++i) {
+        std::cout << i + 1 << ". " << q.options[i] << std::endl;
+    }
+
+    // Get user's answer
+    int userAnswer;
+    std::cout << "Your answer (1-4): ";
+    std::cin >> userAnswer;
+
+    // Check the answer
+    if (userAnswer >= 1 && userAnswer <= 4) {
+        if (userAnswer == q.correctOption) {
+            std::cout << "Correct!" << std::endl;
+        } else {
+            std::cout << "Incorrect. The correct answer is: " << q.correctOption << ". " << q.options[q.correctOption - 1] << std::endl;
+        }
+    } else {
+        std::cout << "Invalid answer. Please enter a number between 1 and 4." << std::endl;
+    }
+}
+
+int main() {
+    // Define quiz questions
+    Question question1 = {"What is the capital of France?", {"Paris", "Berlin", "London", "Madrid"}, 1};
+    Question question2 = {"Which planet is known as the Red Planet?", {"Venus", "Mars", "Jupiter", "Saturn"}, 2};
+    Question question3 = {"Who wrote 'Romeo and Juliet'?", {"Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"}, 2};
+
+    // Ask each question
+    askQuestion(question1);
+    askQuestion(question2);
+    askQuestion(question3);
+
+    return 0;
+}
