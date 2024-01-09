@@ -1,0 +1,94 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+struct InventoryItem {
+    std::string itemName;
+    int quantity;
+    double price;
+};
+
+void viewInventory(const std::vector<InventoryItem>& inventory) {
+    if (inventory.empty()) {
+        std::cout << "Inventory is empty." << std::endl;
+    } else {
+        std::cout << "Inventory List:" << std::endl;
+        for (const InventoryItem& item : inventory) {
+            std::cout << "Item: " << item.itemName << ", Quantity: " << item.quantity << ", Price: $" << item.price << std::endl;
+        }
+    }
+}
+
+void addItemToInventory(std::vector<InventoryItem>& inventory, const std::string& itemName, int quantity, double price) {
+    InventoryItem newItem{itemName, quantity, price};
+    inventory.push_back(newItem);
+    std::cout << "Item added to the inventory." << std::endl;
+}
+
+void searchInventory(const std::vector<InventoryItem>& inventory, const std::string& itemName) {
+    auto it = std::find_if(inventory.begin(), inventory.end(),
+                           [itemName](const InventoryItem& item) {
+                               return item.itemName == itemName;
+                           });
+
+    if (it != inventory.end()) {
+        std::cout << "Item found in the inventory:" << std::endl;
+        std::cout << "Item: " << it->itemName << ", Quantity: " << it->quantity << ", Price: $" << it->price << std::endl;
+    } else {
+        std::cout << "Item not found in the inventory." << std::endl;
+    }
+}
+
+int main() {
+    std::vector<InventoryItem> inventory;
+    char choice;
+
+    do {
+        std::cout << "Inventory Management System" << std::endl;
+        std::cout << "1. View Inventory" << std::endl;
+        std::cout << "2. Add Item to Inventory" << std::endl;
+        std::cout << "3. Search Inventory" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1':
+                viewInventory(inventory);
+                break;
+            case '2': {
+                std::string itemName;
+                int quantity;
+                double price;
+
+                std::cin.ignore();
+                std::cout << "Enter item name: ";
+                std::getline(std::cin, itemName);
+
+                std::cout << "Enter item quantity: ";
+                std::cin >> quantity;
+
+                std::cout << "Enter item price: $";
+                std::cin >> price;
+
+                addItemToInventory(inventory, itemName, quantity, price);
+                break;
+            }
+            case '3': {
+                std::string itemName;
+                std::cin.ignore();
+                std::cout << "Enter item name to search: ";
+                std::getline(std::cin, itemName);
+                searchInventory(inventory, itemName);
+                break;
+            }
+            case '4':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '4');
+
+    return 0;
+}
