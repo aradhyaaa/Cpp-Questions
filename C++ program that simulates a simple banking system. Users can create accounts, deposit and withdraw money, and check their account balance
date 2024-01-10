@@ -1,0 +1,121 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+struct BankAccount {
+    std::string accountHolderName;
+    int accountNumber;
+    double balance;
+};
+
+void createAccount(std::vector<BankAccount>& accounts, const std::string& accountHolderName, int accountNumber, double initialBalance) {
+    BankAccount newAccount{accountHolderName, accountNumber, initialBalance};
+    accounts.push_back(newAccount);
+    std::cout << "Account created successfully." << std::endl;
+}
+
+void depositMoney(std::vector<BankAccount>& accounts, int accountNumber, double amount) {
+    auto it = std::find_if(accounts.begin(), accounts.end(),
+                           [accountNumber](const BankAccount& account) {
+                               return account.accountNumber == accountNumber;
+                           });
+
+    if (it != accounts.end()) {
+        it->balance += amount;
+        std::cout << "Deposit successful. Updated balance: $" << it->balance << std::endl;
+    } else {
+        std::cout << "Account not found." << std::endl;
+    }
+}
+
+void withdrawMoney(std::vector<BankAccount>& accounts, int accountNumber, double amount) {
+    auto it = std::find_if(accounts.begin(), accounts.end(),
+                           [accountNumber](const BankAccount& account) {
+                               return account.accountNumber == accountNumber;
+                           });
+
+    if (it != accounts.end()) {
+        if (it->balance >= amount) {
+            it->balance -= amount;
+            std::cout << "Withdrawal successful. Updated balance: $" << it->balance << std::endl;
+        } else {
+            std::cout << "Insufficient funds." << std::endl;
+        }
+    } else {
+        std::cout << "Account not found." << std::endl;
+    }
+}
+
+void checkBalance(const std::vector<BankAccount>& accounts, int accountNumber) {
+    auto it = std::find_if(accounts.begin(), accounts.end(),
+                           [accountNumber](const BankAccount& account) {
+                               return account.accountNumber == accountNumber;
+                           });
+
+    if (it != accounts.end()) {
+        std::cout << "Account balance for account " << it->accountNumber << ": $" << it->balance << std::endl;
+    } else {
+        std::cout << "Account not found." << std::endl;
+    }
+}
+
+int main() {
+    std::vector<BankAccount> bankAccounts;
+    char choice;
+
+    do {
+        std::cout << "Banking System" << std::endl;
+        std::cout << "1. Create Account" << std::endl;
+        std::cout << "2. Deposit Money" << std::endl;
+        std::cout << "3. Withdraw Money" << std::endl;
+        std::cout << "4. Check Balance" << std::endl;
+        std::cout << "5. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                std::string accountHolderName;
+                int accountNumber;
+                double initialBalance;
+
+                std::cin.ignore();
+                std::cout << "Enter account holder name: ";
+                std::getline(std::cin, accountHolderName);
+
+                std::cout << "Enter account number: ";
+                std::cin >> accountNumber;
+
+                std::cout << "Enter initial balance: $";
+                std::cin >> initialBalance;
+
+                createAccount(bankAccounts, accountHolderName, accountNumber, initialBalance);
+                break;
+            }
+            case '2': {
+                int accountNumber;
+                double depositAmount;
+
+                std::cout << "Enter account number: ";
+                std::cin >> accountNumber;
+
+                std::cout << "Enter deposit amount: $";
+                std::cin >> depositAmount;
+
+                depositMoney(bankAccounts, accountNumber, depositAmount);
+                break;
+            }
+            case '3': {
+                int accountNumber;
+                double withdrawalAmount;
+
+                std::cout << "Enter account number: ";
+                std::cin >> accountNumber;
+
+                std::cout << "Enter withdrawal amount: $";
+                std::cin >> withdrawalAmount;
+
+                withdrawMoney(bankAccounts, accountNumber, withdrawalAmount);
+                break;
+            }
+           
