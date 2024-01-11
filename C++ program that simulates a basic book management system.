@@ -1,0 +1,99 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+struct Book {
+    std::string title;
+    std::string author;
+    int publicationYear;
+};
+
+class BookManager {
+private:
+    std::vector<Book> books;
+
+public:
+    void addBook(const std::string& title, const std::string& author, int publicationYear) {
+        Book newBook{title, author, publicationYear};
+        books.push_back(newBook);
+        std::cout << "Book added successfully." << std::endl;
+    }
+
+    void viewBooks() const {
+        if (books.empty()) {
+            std::cout << "No books in the library." << std::endl;
+        } else {
+            std::cout << "List of Books:" << std::endl;
+            for (const Book& book : books) {
+                std::cout << "Title: " << book.title << ", Author: " << book.author << ", Year: " << book.publicationYear << std::endl;
+            }
+        }
+    }
+
+    void searchBook(const std::string& title) const {
+        auto it = std::find_if(books.begin(), books.end(),
+                               [title](const Book& book) {
+                                   return book.title == title;
+                               });
+
+        if (it != books.end()) {
+            std::cout << "Book found:" << std::endl;
+            std::cout << "Title: " << it->title << ", Author: " << it->author << ", Year: " << it->publicationYear << std::endl;
+        } else {
+            std::cout << "Book not found." << std::endl;
+        }
+    }
+};
+
+int main() {
+    BookManager bookManager;
+    char choice;
+
+    do {
+        std::cout << "Book Management System" << std::endl;
+        std::cout << "1. Add Book" << std::endl;
+        std::cout << "2. View Books" << std::endl;
+        std::cout << "3. Search Book" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                std::cin.ignore();
+                std::string title, author;
+                int publicationYear;
+
+                std::cout << "Enter book title: ";
+                std::getline(std::cin, title);
+
+                std::cout << "Enter author name: ";
+                std::getline(std::cin, author);
+
+                std::cout << "Enter publication year: ";
+                std::cin >> publicationYear;
+
+                bookManager.addBook(title, author, publicationYear);
+                break;
+            }
+            case '2':
+                bookManager.viewBooks();
+                break;
+            case '3': {
+                std::cin.ignore();
+                std::string title;
+                std::cout << "Enter book title to search: ";
+                std::getline(std::cin, title);
+                bookManager.searchBook(title);
+                break;
+            }
+            case '4':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '4');
+
+    return 0;
+}
