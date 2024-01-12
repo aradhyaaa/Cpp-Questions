@@ -1,0 +1,83 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+struct MaintenanceTask {
+    std::string taskName;
+    bool completed;
+};
+
+class HouseMaintenanceSystem {
+private:
+    std::vector<MaintenanceTask> tasks;
+
+public:
+    void addTask(const std::string& taskName) {
+        MaintenanceTask newTask{taskName, false};
+        tasks.push_back(newTask);
+        std::cout << "Task added to the house maintenance system." << std::endl;
+    }
+
+    void markTaskAsCompleted(int taskIndex) {
+        if (taskIndex >= 0 && taskIndex < tasks.size()) {
+            tasks[taskIndex].completed = true;
+            std::cout << "Task marked as completed." << std::endl;
+        } else {
+            std::cout << "Invalid task index." << std::endl;
+        }
+    }
+
+    void viewTasks() const {
+        if (tasks.empty()) {
+            std::cout << "No tasks in the house maintenance system." << std::endl;
+        } else {
+            std::cout << "List of Maintenance Tasks:" << std::endl;
+            for (size_t i = 0; i < tasks.size(); ++i) {
+                std::cout << "[" << (tasks[i].completed ? "X" : " ") << "] " << i + 1 << ". " << tasks[i].taskName << std::endl;
+            }
+        }
+    }
+};
+
+int main() {
+    HouseMaintenanceSystem maintenanceSystem;
+    char choice;
+
+    do {
+        std::cout << "House Maintenance System" << std::endl;
+        std::cout << "1. Add Task" << std::endl;
+        std::cout << "2. Mark Task as Completed" << std::endl;
+        std::cout << "3. View Tasks" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                std::cin.ignore();
+                std::string taskName;
+                std::cout << "Enter task name: ";
+                std::getline(std::cin, taskName);
+                maintenanceSystem.addTask(taskName);
+                break;
+            }
+            case '2': {
+                int taskIndex;
+                std::cout << "Enter task index to mark as completed: ";
+                std::cin >> taskIndex;
+                maintenanceSystem.markTaskAsCompleted(taskIndex - 1); // Subtract 1 to convert to zero-based indexing
+                break;
+            }
+            case '3':
+                maintenanceSystem.viewTasks();
+                break;
+            case '4':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '4');
+
+    return 0;
+}
