@@ -1,0 +1,118 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+struct Employee {
+    std::string name;
+    int employeeID;
+};
+
+struct Shift {
+    std::string day;
+    int employeeID;  // ID of the employee assigned to the shift
+};
+
+class ShiftManagementSystem {
+private:
+    std::vector<Employee> employees;
+    std::vector<Shift> shifts;
+
+public:
+    void addEmployee(const std::string& name, int employeeID) {
+        Employee newEmployee{name, employeeID};
+        employees.push_back(newEmployee);
+        std::cout << "Employee added to the system." << std::endl;
+    }
+
+    void assignShift(const std::string& day, int employeeID) {
+        // Check if the employee exists
+        auto it = std::find_if(employees.begin(), employees.end(),
+                               [employeeID](const Employee& emp) {
+                                   return emp.employeeID == employeeID;
+                               });
+
+        if (it != employees.end()) {
+            Shift newShift{day, employeeID};
+            shifts.push_back(newShift);
+            std::cout << "Shift assigned successfully." << std::endl;
+        } else {
+            std::cout << "Employee not found." << std::endl;
+        }
+    }
+
+    void viewShiftSchedule() const {
+        if (shifts.empty()) {
+            std::cout << "No shifts assigned." << std::endl;
+        } else {
+            std::cout << "Shift Schedule:" << std::endl;
+            for (const Shift& shift : shifts) {
+                auto employeeIt = std::find_if(employees.begin(), employees.end(),
+                                               [shift](const Employee& emp) {
+                                                   return emp.employeeID == shift.employeeID;
+                                               });
+
+                if (employeeIt != employees.end()) {
+                    std::cout << "Day: " << shift.day << ", Employee: " << employeeIt->name << std::endl;
+                } else {
+                    std::cout << "Day: " << shift.day << ", Employee not found" << std::endl;
+                }
+            }
+        }
+    }
+};
+
+int main() {
+    ShiftManagementSystem shiftSystem;
+    char choice;
+
+    do {
+        std::cout << "Employee Shift Management System" << std::endl;
+        std::cout << "1. Add Employee" << std::endl;
+        std::cout << "2. Assign Shift" << std::endl;
+        std::cout << "3. View Shift Schedule" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                std::cin.ignore();
+                std::string name;
+                int employeeID;
+
+                std::cout << "Enter employee name: ";
+                std::getline(std::cin, name);
+
+                std::cout << "Enter employee ID: ";
+                std::cin >> employeeID;
+
+                shiftSystem.addEmployee(name, employeeID);
+                break;
+            }
+            case '2': {
+                std::cin.ignore();
+                std::string day;
+                int employeeID;
+
+                std::cout << "Enter day for the shift: ";
+                std::getline(std::cin, day);
+
+                std::cout << "Enter employee ID to assign the shift: ";
+                std::cin >> employeeID;
+
+                shiftSystem.assignShift(day, employeeID);
+                break;
+            }
+            case '3':
+                shiftSystem.viewShiftSchedule();
+                break;
+            case '4':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '4');
+
+    return 0;
+}
