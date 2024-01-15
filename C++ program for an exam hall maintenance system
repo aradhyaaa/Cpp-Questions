@@ -1,0 +1,88 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <iomanip>
+
+struct MaintenanceTask {
+    std::string taskName;
+    int priority;
+    bool completed;
+    std::string dueDate;
+};
+
+class ExamHallMaintenanceSystem {
+private:
+    std::vector<MaintenanceTask> tasks;
+
+public:
+    void addTask(const std::string& taskName, int priority, const std::string& dueDate) {
+        MaintenanceTask newTask{taskName, priority, false, dueDate};
+        tasks.push_back(newTask);
+        std::cout << "Task added to the exam hall maintenance system." << std::endl;
+    }
+
+    void markTaskAsCompleted(int taskIndex) {
+        if (taskIndex >= 0 && taskIndex < tasks.size()) {
+            tasks[taskIndex].completed = true;
+            std::cout << "Task marked as completed." << std::endl;
+        } else {
+            std::cout << "Invalid task index." << std::endl;
+        }
+    }
+
+    void viewTasks() const {
+        if (tasks.empty()) {
+            std::cout << "No tasks in the exam hall maintenance system." << std::endl;
+        } else {
+            std::cout << std::setw(4) << "ID" << std::setw(20) << "Task Name" << std::setw(10) << "Priority" << std::setw(15) << "Due Date" << std::setw(12) << "Status" << std::endl;
+            std::cout << std::string(61, '-') << std::endl;
+
+            for (size_t i = 0; i < tasks.size(); ++i) {
+                std::cout << std::setw(4) << i + 1 << std::setw(20) << tasks[i].taskName << std::setw(10) << tasks[i].priority << std::setw(15) << tasks[i].dueDate << std::setw(12) << (tasks[i].completed ? "Completed" : "Pending") << std::endl;
+            }
+        }
+    }
+};
+
+int main() {
+    ExamHallMaintenanceSystem maintenanceSystem;
+    char choice;
+
+    do {
+        std::cout << "Exam Hall Maintenance System" << std::endl;
+        std::cout << "1. Add Task" << std::endl;
+        std::cout << "2. Mark Task as Completed" << std::endl;
+        std::cout << "3. View Tasks" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                std::cin.ignore();
+                std::string taskName;
+                int priority;
+                std::string dueDate;
+
+                std::cout << "Enter task name: ";
+                std::getline(std::cin, taskName);
+
+                std::cout << "Enter task priority (1: Low, 2: Medium, 3: High): ";
+                std::cin >> priority;
+
+                std::cout << "Enter due date (e.g., DD/MM/YYYY): ";
+                std::cin >> dueDate;
+
+                maintenanceSystem.addTask(taskName, priority, dueDate);
+                break;
+            }
+            case '2': {
+                int taskIndex;
+                std::cout << "Enter task index to mark as completed: ";
+                std::cin >> taskIndex;
+                maintenanceSystem.markTaskAsCompleted(taskIndex - 1); // Subtract 1 to convert to zero-based indexing
+                break;
+            }
+            case '3':
+        
