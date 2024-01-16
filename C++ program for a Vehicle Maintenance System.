@@ -1,0 +1,143 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <iomanip>
+
+struct MaintenanceTask {
+    std::string taskName;
+    bool completed;
+};
+
+struct Vehicle {
+    std::string model;
+    std::string licensePlate;
+    std::vector<MaintenanceTask> maintenanceTasks;
+};
+
+class VehicleMaintenanceSystem {
+private:
+    std::vector<Vehicle> vehicles;
+
+public:
+    void addVehicle(const std::string& model, const std::string& licensePlate) {
+        Vehicle newVehicle{model, licensePlate, {}};
+        vehicles.push_back(newVehicle);
+        std::cout << "Vehicle added to the maintenance system." << std::endl;
+    }
+
+    void addMaintenanceTask(int vehicleIndex, const std::string& taskName) {
+        if (vehicleIndex >= 0 && vehicleIndex < vehicles.size()) {
+            MaintenanceTask newTask{taskName, false};
+            vehicles[vehicleIndex].maintenanceTasks.push_back(newTask);
+            std::cout << "Maintenance task added to the vehicle." << std::endl;
+        } else {
+            std::cout << "Invalid vehicle index." << std::endl;
+        }
+    }
+
+    void markTaskAsCompleted(int vehicleIndex, int taskIndex) {
+        if (vehicleIndex >= 0 && vehicleIndex < vehicles.size()) {
+            if (taskIndex >= 0 && taskIndex < vehicles[vehicleIndex].maintenanceTasks.size()) {
+                vehicles[vehicleIndex].maintenanceTasks[taskIndex].completed = true;
+                std::cout << "Maintenance task marked as completed." << std::endl;
+            } else {
+                std::cout << "Invalid task index." << std::endl;
+            }
+        } else {
+            std::cout << "Invalid vehicle index." << std::endl;
+        }
+    }
+
+    void viewMaintenanceHistory(int vehicleIndex) const {
+        if (vehicleIndex >= 0 && vehicleIndex < vehicles.size()) {
+            const Vehicle& vehicle = vehicles[vehicleIndex];
+
+            std::cout << "Maintenance History for Vehicle (" << vehicle.model << ", " << vehicle.licensePlate << "):" << std::endl;
+            if (vehicle.maintenanceTasks.empty()) {
+                std::cout << "No maintenance tasks recorded." << std::endl;
+            } else {
+                std::cout << std::setw(4) << "ID" << std::setw(25) << "Task Name" << std::setw(12) << "Status" << std::endl;
+                std::cout << std::string(43, '-') << std::endl;
+
+                for (size_t i = 0; i < vehicle.maintenanceTasks.size(); ++i) {
+                    std::cout << "[" << (vehicle.maintenanceTasks[i].completed ? "Completed" : "Pending") << "] " << i + 1
+                              << ". " << std::setw(25) << vehicle.maintenanceTasks[i].taskName << std::endl;
+                }
+            }
+        } else {
+            std::cout << "Invalid vehicle index." << std::endl;
+        }
+    }
+};
+
+int main() {
+    VehicleMaintenanceSystem maintenanceSystem;
+    char choice;
+
+    do {
+        std::cout << "Vehicle Maintenance System" << std::endl;
+        std::cout << "1. Add Vehicle" << std::endl;
+        std::cout << "2. Add Maintenance Task" << std::endl;
+        std::cout << "3. Mark Task as Completed" << std::endl;
+        std::cout << "4. View Maintenance History" << std::endl;
+        std::cout << "5. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                std::cin.ignore();
+                std::string model, licensePlate;
+
+                std::cout << "Enter vehicle model: ";
+                std::getline(std::cin, model);
+
+                std::cout << "Enter vehicle license plate: ";
+                std::getline(std::cin, licensePlate);
+
+                maintenanceSystem.addVehicle(model, licensePlate);
+                break;
+            }
+            case '2': {
+                int vehicleIndex;
+                std::cout << "Enter vehicle index to add maintenance task: ";
+                std::cin >> vehicleIndex;
+
+                std::cin.ignore();
+                std::string taskName;
+                std::cout << "Enter maintenance task name: ";
+                std::getline(std::cin, taskName);
+
+                maintenanceSystem.addMaintenanceTask(vehicleIndex - 1, taskName); // Subtract 1 to convert to zero-based indexing
+                break;
+            }
+            case '3': {
+                int vehicleIndex, taskIndex;
+                std::cout << "Enter vehicle index: ";
+                std::cin >> vehicleIndex;
+
+                std::cout << "Enter task index to mark as completed: ";
+                std::cin >> taskIndex;
+
+                maintenanceSystem.markTaskAsCompleted(vehicleIndex - 1, taskIndex - 1); // Subtract 1 to convert to zero-based indexing
+                break;
+            }
+            case '4': {
+                int vehicleIndex;
+                std::cout << "Enter vehicle index to view maintenance history: ";
+                std::cin >> vehicleIndex;
+
+                maintenanceSystem.viewMaintenanceHistory(vehicleIndex - 1); // Subtract 1 to convert to zero-based indexing
+                break;
+            }
+            case '5':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '5');
+
+    return 0;
+}
