@@ -1,0 +1,155 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <iomanip>
+
+struct WorkoutSession {
+    std::string date;
+    int sets;
+    int reps;
+    bool completed;
+};
+
+struct Exercise {
+    std::string name;
+    std::string category;
+    std::vector<WorkoutSession> workoutSessions;
+};
+
+class GymWorkoutLogSystem {
+private:
+    std::vector<Exercise> exercises;
+
+public:
+    void addExercise(const std::string& name, const std::string& category) {
+        Exercise newExercise{name, category, {}};
+        exercises.push_back(newExercise);
+        std::cout << "Exercise added to the workout log system." << std::endl;
+    }
+
+    void logWorkoutSession(int exerciseIndex, const std::string& date, int sets, int reps) {
+        if (exerciseIndex >= 0 && exerciseIndex < exercises.size()) {
+            WorkoutSession newSession{date, sets, reps, false};
+            exercises[exerciseIndex].workoutSessions.push_back(newSession);
+            std::cout << "Workout session logged for the exercise." << std::endl;
+        } else {
+            std::cout << "Invalid exercise index." << std::endl;
+        }
+    }
+
+    void markExerciseAsCompleted(int exerciseIndex, int sessionIndex) {
+        if (exerciseIndex >= 0 && exerciseIndex < exercises.size()) {
+            if (sessionIndex >= 0 && sessionIndex < exercises[exerciseIndex].workoutSessions.size()) {
+                exercises[exerciseIndex].workoutSessions[sessionIndex].completed = true;
+                std::cout << "Exercise marked as completed." << std::endl;
+            } else {
+                std::cout << "Invalid session index." << std::endl;
+            }
+        } else {
+            std::cout << "Invalid exercise index." << std::endl;
+        }
+    }
+
+    void viewWorkoutLog(int exerciseIndex) const {
+        if (exerciseIndex >= 0 && exerciseIndex < exercises.size()) {
+            const Exercise& exercise = exercises[exerciseIndex];
+
+            std::cout << "Workout Log for Exercise (" << exercise.name << ", " << exercise.category << "):" << std::endl;
+            if (exercise.workoutSessions.empty()) {
+                std::cout << "No workout sessions logged." << std::endl;
+            } else {
+                std::cout << std::setw(4) << "ID" << std::setw(15) << "Date" << std::setw(8) << "Sets" << std::setw(8) << "Reps"
+                          << std::setw(12) << "Status" << std::endl;
+                std::cout << std::string(47, '-') << std::endl;
+
+                for (size_t i = 0; i < exercise.workoutSessions.size(); ++i) {
+                    std::cout << "[" << (exercise.workoutSessions[i].completed ? "Completed" : "Pending") << "] " << i + 1
+                              << ". " << std::setw(15) << exercise.workoutSessions[i].date << std::setw(8)
+                              << exercise.workoutSessions[i].sets << std::setw(8) << exercise.workoutSessions[i].reps << std::endl;
+                }
+            }
+        } else {
+            std::cout << "Invalid exercise index." << std::endl;
+        }
+    }
+};
+
+int main() {
+    GymWorkoutLogSystem workoutLogSystem;
+    char choice;
+
+    do {
+        std::cout << "Gym Workout Log System" << std::endl;
+        std::cout << "1. Add Exercise" << std::endl;
+        std::cout << "2. Log Workout Session" << std::endl;
+        std::cout << "3. Mark Exercise as Completed" << std::endl;
+        std::cout << "4. View Workout Log" << std::endl;
+        std::cout << "5. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                std::cin.ignore();
+                std::string name, category;
+
+                std::cout << "Enter exercise name: ";
+                std::getline(std::cin, name);
+
+                std::cout << "Enter exercise category: ";
+                std::getline(std::cin, category);
+
+                workoutLogSystem.addExercise(name, category);
+                break;
+            }
+            case '2': {
+                int exerciseIndex;
+                std::cout << "Enter exercise index to log workout session: ";
+                std::cin >> exerciseIndex;
+
+                std::cin.ignore();
+                std::string date;
+                int sets, reps;
+
+                std::cout << "Enter workout session date (YYYY-MM-DD): ";
+                std::getline(std::cin, date);
+
+                std::cout << "Enter number of sets: ";
+                std::cin >> sets;
+
+                std::cout << "Enter number of reps: ";
+                std::cin >> reps;
+
+                workoutLogSystem.logWorkoutSession(exerciseIndex - 1, date, sets, reps); // Subtract 1 to convert to zero-based indexing
+                break;
+            }
+            case '3': {
+                int exerciseIndex, sessionIndex;
+                std::cout << "Enter exercise index: ";
+                std::cin >> exerciseIndex;
+
+                std::cout << "Enter session index to mark as completed: ";
+                std::cin >> sessionIndex;
+
+                workoutLogSystem.markExerciseAsCompleted(exerciseIndex - 1, sessionIndex - 1); // Subtract 1 to convert to zero-based indexing
+                break;
+            }
+            case '4': {
+                int exerciseIndex;
+                std::cout << "Enter exercise index to view workout log: ";
+                std::cin >> exerciseIndex;
+
+                workoutLogSystem.viewWorkoutLog(exerciseIndex - 1); // Subtract 1 to convert to zero-based indexing
+                break;
+            }
+            case '5':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '5');
+
+    return 0;
+}
