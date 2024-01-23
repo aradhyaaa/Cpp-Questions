@@ -1,0 +1,176 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <iomanip>
+
+struct Movie {
+    std::string title;
+    std::string genre;
+    int availableSeats;
+};
+
+struct Ticket {
+    std::string movieTitle;
+    int bookedSeats;
+};
+
+class MovieTicketBookingSystem {
+private:
+    std::vector<Movie> movies;
+    std::vector<Ticket> bookedTickets;
+
+public:
+    void addMovie(const std::string& title, const std::string& genre, int availableSeats) {
+        Movie newMovie{title, genre, availableSeats};
+        movies.push_back(newMovie);
+        std::cout << "Movie added to the booking system." << std::endl;
+    }
+
+    void bookTickets(const std::string& movieTitle, int numSeats) {
+        auto movieIt = std::find_if(movies.begin(), movies.end(), [movieTitle](const Movie& movie) {
+            return movie.title == movieTitle;
+        });
+
+        if (movieIt != movies.end()) {
+            if (numSeats > 0 && numSeats <= movieIt->availableSeats) {
+                Ticket newTicket{movieTitle, numSeats};
+                bookedTickets.push_back(newTicket);
+                movieIt->availableSeats -= numSeats;
+                std::cout << "Tickets booked successfully." << std::endl;
+            } else {
+                std::cout << "Invalid number of seats or not enough available seats." << std::endl;
+            }
+        } else {
+            std::cout << "Movie not found." << std::endl;
+        }
+    }
+
+    void viewBookedTickets() const {
+        std::cout << "Booked Tickets:" << std::endl;
+        if (bookedTickets.empty()) {
+            std::cout << "No tickets booked." << std::endl;
+        } else {
+            std::cout << std::setw(25) << "Movie Title" << std::setw(15) << "Booked Seats" << std::endl;
+            std::cout << std::string(40, '-') << std::endl;
+
+            for (const auto& ticket : bookedTickets) {
+                std::cout << std::setw(25) << ticket.movieTitle << std::setw(15) << ticket.bookedSeats << std::endl;
+            }
+        }
+    }
+
+    void cancelBookedTickets(const std::string& movieTitle, int numSeats) {
+        auto ticketIt = std::find_if(bookedTickets.begin(), bookedTickets.end(), [movieTitle](const Ticket& ticket) {
+            return ticket.movieTitle == movieTitle;
+        });
+
+        if (ticketIt != bookedTickets.end()) {
+            auto movieIt = std::find_if(movies.begin(), movies.end(), [movieTitle](const Movie& movie) {
+                return movie.title == movieTitle;
+            });
+
+            if (movieIt != movies.end()) {
+                movieIt->availableSeats += numSeats;
+                bookedTickets.erase(ticketIt);
+                std::cout << "Tickets canceled successfully." << std::endl;
+            } else {
+                std::cout << "Movie not found." << std::endl;
+            }
+        } else {
+            std::cout << "No booked tickets found for the movie." << std::endl;
+        }
+    }
+
+    void viewMovieSchedule() const {
+        std::cout << "Movie Schedule:" << std::endl;
+        if (movies.empty()) {
+            std::cout << "No movies in the schedule." << std::endl;
+        } else {
+            std::cout << std::setw(25) << "Movie Title" << std::setw(15) << "Genre" << std::setw(15) << "Available Seats" << std::endl;
+            std::cout << std::string(55, '-') << std::endl;
+
+            for (const auto& movie : movies) {
+                std::cout << std::setw(25) << movie.title << std::setw(15) << movie.genre << std::setw(15) << movie.availableSeats << std::endl;
+            }
+        }
+    }
+};
+
+int main() {
+    MovieTicketBookingSystem bookingSystem;
+    char choice;
+
+    do {
+        std::cout << "Movie Ticket Booking System" << std::endl;
+        std::cout << "1. Add Movie to Schedule" << std::endl;
+        std::cout << "2. Book Tickets" << std::endl;
+        std::cout << "3. View Booked Tickets" << std::endl;
+        std::cout << "4. Cancel Booked Tickets" << std::endl;
+        std::cout << "5. View Movie Schedule" << std::endl;
+        std::cout << "6. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                std::cin.ignore();
+                std::string title, genre;
+                int availableSeats;
+
+                std::cout << "Enter movie title: ";
+                std::getline(std::cin, title);
+
+                std::cout << "Enter movie genre: ";
+                std::getline(std::cin, genre);
+
+                std::cout << "Enter available seats: ";
+                std::cin >> availableSeats;
+
+                bookingSystem.addMovie(title, genre, availableSeats);
+                break;
+            }
+            case '2': {
+                std::cin.ignore();
+                std::string movieTitle;
+                int numSeats;
+
+                std::cout << "Enter movie title: ";
+                std::getline(std::cin, movieTitle);
+
+                std::cout << "Enter number of seats to book: ";
+                std::cin >> numSeats;
+
+                bookingSystem.bookTickets(movieTitle, numSeats);
+                break;
+            }
+            case '3':
+                bookingSystem.viewBookedTickets();
+                break;
+            case '4': {
+                std::cin.ignore();
+                std::string movieTitle;
+                int numSeats;
+
+                std::cout << "Enter movie title: ";
+                std::getline(std::cin, movieTitle);
+
+                std::cout << "Enter number of seats to cancel: ";
+                std::cin >> numSeats;
+
+                bookingSystem.cancelBookedTickets(movieTitle, numSeats);
+                break;
+            }
+            case '5':
+                bookingSystem.viewMovieSchedule();
+                break;
+            case '6':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '6');
+
+    return 0;
+}
