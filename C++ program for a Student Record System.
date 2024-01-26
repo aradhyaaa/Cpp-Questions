@@ -1,0 +1,135 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
+
+struct Student {
+    std::string name;
+    int studentID;
+    std::vector<int> grades;
+};
+
+class StudentRecordSystem {
+private:
+    std::vector<Student> students;
+
+public:
+    void addStudent(const std::string& name, int studentID) {
+        Student newStudent{name, studentID, {}};
+        students.push_back(newStudent);
+        std::cout << "Student added to the record system." << std::endl;
+    }
+
+    void inputGrades(int studentIndex, int grade) {
+        if (studentIndex >= 0 && studentIndex < students.size()) {
+            students[studentIndex].grades.push_back(grade);
+            std::cout << "Grade added successfully." << std::endl;
+        } else {
+            std::cout << "Invalid student index." << std::endl;
+        }
+    }
+
+    double calculateAverageGrade(int studentIndex) const {
+        if (studentIndex >= 0 && studentIndex < students.size()) {
+            const Student& student = students[studentIndex];
+
+            if (!student.grades.empty()) {
+                int sum = 0;
+                for (int grade : student.grades) {
+                    sum += grade;
+                }
+
+                return static_cast<double>(sum) / student.grades.size();
+            } else {
+                std::cout << "No grades available for this student." << std::endl;
+                return 0.0;
+            }
+        } else {
+            std::cout << "Invalid student index." << std::endl;
+            return 0.0;
+        }
+    }
+
+    void displayStudentInfo(int studentIndex) const {
+        if (studentIndex >= 0 && studentIndex < students.size()) {
+            const Student& student = students[studentIndex];
+
+            std::cout << "Student Information:" << std::endl;
+            std::cout << "Name: " << student.name << std::endl;
+            std::cout << "Student ID: " << student.studentID << std::endl;
+
+            std::cout << "Grades:";
+            if (!student.grades.empty()) {
+                for (int grade : student.grades) {
+                    std::cout << " " << grade;
+                }
+            } else {
+                std::cout << " No grades available.";
+            }
+            std::cout << std::endl;
+
+            double averageGrade = calculateAverageGrade(studentIndex);
+            std::cout << "Average Grade: " << std::fixed << std::setprecision(2) << averageGrade << std::endl;
+        } else {
+            std::cout << "Invalid student index." << std::endl;
+        }
+    }
+};
+
+int main() {
+    StudentRecordSystem recordSystem;
+    char choice;
+
+    do {
+        std::cout << "Student Record System" << std::endl;
+        std::cout << "1. Add Student" << std::endl;
+        std::cout << "2. Input Grades" << std::endl;
+        std::cout << "3. Display Student Information" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                std::cin.ignore();
+                std::string name;
+                int studentID;
+
+                std::cout << "Enter student name: ";
+                std::getline(std::cin, name);
+
+                std::cout << "Enter student ID: ";
+                std::cin >> studentID;
+
+                recordSystem.addStudent(name, studentID);
+                break;
+            }
+            case '2': {
+                int studentIndex, grade;
+                std::cout << "Enter student index to input grades: ";
+                std::cin >> studentIndex;
+
+                std::cout << "Enter grade: ";
+                std::cin >> grade;
+
+                recordSystem.inputGrades(studentIndex - 1, grade); // Subtract 1 to convert to zero-based indexing
+                break;
+            }
+            case '3': {
+                int studentIndex;
+                std::cout << "Enter student index to display information: ";
+                std::cin >> studentIndex;
+
+                recordSystem.displayStudentInfo(studentIndex - 1); // Subtract 1 to convert to zero-based indexing
+                break;
+            }
+            case '4':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '4');
+
+    return 0;
+}
