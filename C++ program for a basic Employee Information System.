@@ -1,0 +1,123 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
+
+struct Employee {
+    std::string name;
+    int employeeID;
+    double hourlyWage;
+    double hoursWorked;
+};
+
+class EmployeeInformationSystem {
+private:
+    std::vector<Employee> employees;
+
+public:
+    void addEmployee(const std::string& name, int employeeID, double hourlyWage) {
+        Employee newEmployee{name, employeeID, hourlyWage, 0.0};
+        employees.push_back(newEmployee);
+        std::cout << "Employee added to the information system." << std::endl;
+    }
+
+    void recordHoursWorked(int employeeIndex, double hours) {
+        if (employeeIndex >= 0 && employeeIndex < employees.size()) {
+            employees[employeeIndex].hoursWorked += hours;
+            std::cout << "Hours worked recorded successfully." << std::endl;
+        } else {
+            std::cout << "Invalid employee index." << std::endl;
+        }
+    }
+
+    double calculateMonthlySalary(int employeeIndex) const {
+        if (employeeIndex >= 0 && employeeIndex < employees.size()) {
+            const Employee& employee = employees[employeeIndex];
+            return employee.hourlyWage * employee.hoursWorked * 4; // Assuming 4 weeks in a month
+        } else {
+            std::cout << "Invalid employee index." << std::endl;
+            return 0.0;
+        }
+    }
+
+    void viewEmployeeDetails(int employeeIndex) const {
+        if (employeeIndex >= 0 && employeeIndex < employees.size()) {
+            const Employee& employee = employees[employeeIndex];
+
+            std::cout << "Employee Details:" << std::endl;
+            std::cout << "Name: " << employee.name << std::endl;
+            std::cout << "Employee ID: " << employee.employeeID << std::endl;
+            std::cout << "Hourly Wage: $" << std::fixed << std::setprecision(2) << employee.hourlyWage << std::endl;
+            std::cout << "Hours Worked: " << std::fixed << std::setprecision(2) << employee.hoursWorked << " hours" << std::endl;
+
+            double monthlySalary = calculateMonthlySalary(employeeIndex);
+            std::cout << "Monthly Salary: $" << std::fixed << std::setprecision(2) << monthlySalary << std::endl;
+        } else {
+            std::cout << "Invalid employee index." << std::endl;
+        }
+    }
+};
+
+int main() {
+    EmployeeInformationSystem informationSystem;
+    char choice;
+
+    do {
+        std::cout << "Employee Information System" << std::endl;
+        std::cout << "1. Add Employee" << std::endl;
+        std::cout << "2. Record Hours Worked" << std::endl;
+        std::cout << "3. View Employee Details" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                std::cin.ignore();
+                std::string name;
+                int employeeID;
+                double hourlyWage;
+
+                std::cout << "Enter employee name: ";
+                std::getline(std::cin, name);
+
+                std::cout << "Enter employee ID: ";
+                std::cin >> employeeID;
+
+                std::cout << "Enter hourly wage: $";
+                std::cin >> hourlyWage;
+
+                informationSystem.addEmployee(name, employeeID, hourlyWage);
+                break;
+            }
+            case '2': {
+                int employeeIndex;
+                double hours;
+
+                std::cout << "Enter employee index to record hours worked: ";
+                std::cin >> employeeIndex;
+
+                std::cout << "Enter hours worked: ";
+                std::cin >> hours;
+
+                informationSystem.recordHoursWorked(employeeIndex - 1, hours); // Subtract 1 to convert to zero-based indexing
+                break;
+            }
+            case '3': {
+                int employeeIndex;
+                std::cout << "Enter employee index to view details: ";
+                std::cin >> employeeIndex;
+
+                informationSystem.viewEmployeeDetails(employeeIndex - 1); // Subtract 1 to convert to zero-based indexing
+                break;
+            }
+            case '4':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '4');
+
+    return 0;
+}
