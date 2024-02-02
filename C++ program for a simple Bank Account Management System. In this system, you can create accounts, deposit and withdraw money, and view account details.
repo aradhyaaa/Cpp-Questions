@@ -1,0 +1,131 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
+
+class BankAccount {
+private:
+    std::string accountHolderName;
+    int accountNumber;
+    double balance;
+
+public:
+    BankAccount(const std::string& name, int number) : accountHolderName(name), accountNumber(number), balance(0.0) {}
+
+    void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            std::cout << "Deposit successful. New balance: $" << std::fixed << std::setprecision(2) << balance << std::endl;
+        } else {
+            std::cout << "Invalid deposit amount." << std::endl;
+        }
+    }
+
+    void withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            std::cout << "Withdrawal successful. New balance: $" << std::fixed << std::setprecision(2) << balance << std::endl;
+        } else {
+            std::cout << "Invalid withdrawal amount or insufficient balance." << std::endl;
+        }
+    }
+
+    void viewAccountDetails() const {
+        std::cout << "Account Details:" << std::endl;
+        std::cout << "Account Holder: " << accountHolderName << std::endl;
+        std::cout << "Account Number: " << accountNumber << std::endl;
+        std::cout << "Current Balance: $" << std::fixed << std::setprecision(2) << balance << std::endl;
+    }
+};
+
+class BankManagementSystem {
+private:
+    std::vector<BankAccount> accounts;
+    int nextAccountNumber;
+
+public:
+    BankManagementSystem() : nextAccountNumber(1000) {}
+
+    void createAccount(const std::string& accountHolderName) {
+        BankAccount newAccount(accountHolderName, nextAccountNumber++);
+        accounts.push_back(newAccount);
+        std::cout << "Account created successfully." << std::endl;
+    }
+
+    BankAccount* findAccount(int accountNumber) {
+        auto it = std::find_if(accounts.begin(), accounts.end(), [accountNumber](const BankAccount& account) {
+            return account.getAccountNumber() == accountNumber;
+        });
+
+        return (it != accounts.end()) ? &(*it) : nullptr;
+    }
+
+    void performTransaction(int accountNumber, char transactionType, double amount) {
+        BankAccount* account = findAccount(accountNumber);
+
+        if (account != nullptr) {
+            switch (transactionType) {
+                case 'D':
+                case 'd':
+                    account->deposit(amount);
+                    break;
+                case 'W':
+                case 'w':
+                    account->withdraw(amount);
+                    break;
+                default:
+                    std::cout << "Invalid transaction type. Use 'D' for deposit or 'W' for withdrawal." << std::endl;
+            }
+        } else {
+            std::cout << "Account not found." << std::endl;
+        }
+    }
+
+    void viewAllAccounts() const {
+        std::cout << "All Bank Accounts:" << std::endl;
+        for (const auto& account : accounts) {
+            account.viewAccountDetails();
+            std::cout << std::endl;
+        }
+    }
+};
+
+int main() {
+    BankManagementSystem bankSystem;
+    char choice;
+
+    do {
+        std::cout << "Bank Account Management System" << std::endl;
+        std::cout << "1. Create Account" << std::endl;
+        std::cout << "2. Perform Transaction" << std::endl;
+        std::cout << "3. View All Accounts" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                std::cin.ignore();
+                std::string accountHolderName;
+                std::cout << "Enter account holder name: ";
+                std::getline(std::cin, accountHolderName);
+                bankSystem.createAccount(accountHolderName);
+                break;
+            }
+            case '2': {
+                int accountNumber;
+                char transactionType;
+                double amount;
+
+                std::cout << "Enter account number: ";
+                std::cin >> accountNumber;
+
+                std::cout << "Enter transaction type ('D' for deposit, 'W' for withdrawal): ";
+                std::cin >> transactionType;
+
+                std::cout << "Enter transaction amount: $";
+                std::cin >> amount;
+
+                bankSystem.performTransaction(accountNumber, transactionType, amount);
+                break;
+  
