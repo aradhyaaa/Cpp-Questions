@@ -1,0 +1,101 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <iomanip>
+
+struct Product {
+    std::string name;
+    int quantity;
+
+    Product(const std::string& _name, int _quantity) : name(_name), quantity(_quantity) {}
+};
+
+class InventoryManagementSystem {
+private:
+    std::vector<Product> inventory;
+
+public:
+    void addProduct(const std::string& name, int quantity) {
+        Product newProduct(name, quantity);
+        inventory.push_back(newProduct);
+        std::cout << "Product added to the inventory." << std::endl;
+    }
+
+    void updateQuantity(int productIndex, int newQuantity) {
+        if (productIndex >= 0 && productIndex < inventory.size()) {
+            inventory[productIndex].quantity = newQuantity;
+            std::cout << "Quantity updated successfully." << std::endl;
+        } else {
+            std::cout << "Invalid product index." << std::endl;
+        }
+    }
+
+    void viewInventory() const {
+        std::cout << "Inventory:" << std::endl;
+        if (inventory.empty()) {
+            std::cout << "No products in the inventory." << std::endl;
+        } else {
+            std::cout << std::setw(4) << "ID" << std::setw(30) << "Product Name" << std::setw(12) << "Quantity" << std::endl;
+            std::cout << std::string(56, '-') << std::endl;
+
+            for (size_t i = 0; i < inventory.size(); ++i) {
+                std::cout << i + 1 << ". " << std::setw(30) << inventory[i].name << std::setw(12) << inventory[i].quantity << std::endl;
+            }
+        }
+    }
+};
+
+int main() {
+    InventoryManagementSystem inventorySystem;
+    char choice;
+
+    do {
+        std::cout << "Inventory Management System" << std::endl;
+        std::cout << "1. Add Product" << std::endl;
+        std::cout << "2. Update Quantity" << std::endl;
+        std::cout << "3. View Inventory" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                std::cin.ignore();
+                std::string name;
+                int quantity;
+
+                std::cout << "Enter product name: ";
+                std::getline(std::cin, name);
+
+                std::cout << "Enter initial quantity: ";
+                std::cin >> quantity;
+
+                inventorySystem.addProduct(name, quantity);
+                break;
+            }
+            case '2': {
+                int productIndex, newQuantity;
+
+                std::cout << "Enter product index to update quantity: ";
+                std::cin >> productIndex;
+
+                std::cout << "Enter new quantity: ";
+                std::cin >> newQuantity;
+
+                inventorySystem.updateQuantity(productIndex - 1, newQuantity); // Subtract 1 to convert to zero-based indexing
+                break;
+            }
+            case '3':
+                inventorySystem.viewInventory();
+                break;
+            case '4':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '4');
+
+    return 0;
+}
