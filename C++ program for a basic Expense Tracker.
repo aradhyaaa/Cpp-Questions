@@ -1,0 +1,87 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
+
+struct Expense {
+    std::string category;
+    double amount;
+
+    Expense(const std::string& _category, double _amount) : category(_category), amount(_amount) {}
+};
+
+class ExpenseTracker {
+private:
+    std::vector<Expense> expenses;
+
+public:
+    void addExpense(const std::string& category, double amount) {
+        Expense newExpense(category, amount);
+        expenses.push_back(newExpense);
+        std::cout << "Expense added to the tracker." << std::endl;
+    }
+
+    double calculateTotalExpenses() const {
+        double total = 0.0;
+        for (const Expense& expense : expenses) {
+            total += expense.amount;
+        }
+        return total;
+    }
+
+    void viewExpenseDetails() const {
+        std::cout << "Expense Details:" << std::endl;
+        if (expenses.empty()) {
+            std::cout << "No expenses tracked yet." << std::endl;
+        } else {
+            std::cout << std::setw(15) << "Category" << std::setw(12) << "Amount" << std::endl;
+            std::cout << std::string(27, '-') << std::endl;
+            for (const Expense& expense : expenses) {
+                std::cout << std::setw(15) << expense.category << std::setw(12) << std::fixed << std::setprecision(2) << expense.amount << std::endl;
+            }
+            std::cout << std::string(27, '-') << std::endl;
+            std::cout << "Total: $" << std::fixed << std::setprecision(2) << calculateTotalExpenses() << std::endl;
+        }
+    }
+};
+
+int main() {
+    ExpenseTracker tracker;
+    char choice;
+
+    do {
+        std::cout << "Expense Tracker" << std::endl;
+        std::cout << "1. Add Expense" << std::endl;
+        std::cout << "2. View Expense Details" << std::endl;
+        std::cout << "3. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                std::cin.ignore();
+                std::string category;
+                double amount;
+
+                std::cout << "Enter expense category: ";
+                std::getline(std::cin, category);
+
+                std::cout << "Enter expense amount: ";
+                std::cin >> amount;
+
+                tracker.addExpense(category, amount);
+                break;
+            }
+            case '2':
+                tracker.viewExpenseDetails();
+                break;
+            case '3':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '3');
+
+    return 0;
+}
