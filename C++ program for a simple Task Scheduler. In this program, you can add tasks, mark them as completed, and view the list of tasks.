@@ -1,0 +1,94 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <iomanip>
+
+struct Task {
+    std::string description;
+    bool completed;
+
+    Task(const std::string& _description) : description(_description), completed(false) {}
+};
+
+class TaskScheduler {
+private:
+    std::vector<Task> tasks;
+
+public:
+    void addTask(const std::string& description) {
+        Task newTask(description);
+        tasks.push_back(newTask);
+        std::cout << "Task added to the scheduler." << std::endl;
+    }
+
+    void markTaskAsCompleted(int taskIndex) {
+        if (taskIndex >= 0 && taskIndex < tasks.size()) {
+            tasks[taskIndex].completed = true;
+            std::cout << "Task marked as completed." << std::endl;
+        } else {
+            std::cout << "Invalid task index." << std::endl;
+        }
+    }
+
+    void viewTaskList() const {
+        std::cout << "Task List:" << std::endl;
+        if (tasks.empty()) {
+            std::cout << "No tasks in the scheduler." << std::endl;
+        } else {
+            std::cout << std::setw(4) << "ID" << std::setw(60) << "Description" << std::setw(12) << "Status" << std::endl;
+            std::cout << std::string(76, '-') << std::endl;
+
+            for (size_t i = 0; i < tasks.size(); ++i) {
+                std::cout << "[" << (tasks[i].completed ? "Completed" : "Pending") << "] " << i + 1 << ". " << std::setw(60)
+                          << tasks[i].description << std::endl;
+            }
+        }
+    }
+};
+
+int main() {
+    TaskScheduler scheduler;
+    char choice;
+
+    do {
+        std::cout << "Task Scheduler" << std::endl;
+        std::cout << "1. Add Task" << std::endl;
+        std::cout << "2. Mark Task as Completed" << std::endl;
+        std::cout << "3. View Task List" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                std::cin.ignore();
+                std::string description;
+
+                std::cout << "Enter task description: ";
+                std::getline(std::cin, description);
+
+                scheduler.addTask(description);
+                break;
+            }
+            case '2': {
+                int taskIndex;
+                std::cout << "Enter task index to mark as completed: ";
+                std::cin >> taskIndex;
+
+                scheduler.markTaskAsCompleted(taskIndex - 1); // Subtract 1 to convert to zero-based indexing
+                break;
+            }
+            case '3':
+                scheduler.viewTaskList();
+                break;
+            case '4':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '4');
+
+    return 0;
+}
