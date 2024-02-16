@@ -1,0 +1,120 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <iomanip>
+
+struct Contact {
+    std::string name;
+    std::string phoneNumber;
+    std::string email;
+
+    Contact(const std::string& _name, const std::string& _phoneNumber, const std::string& _email)
+        : name(_name), phoneNumber(_phoneNumber), email(_email) {}
+};
+
+class ContactManagementSystem {
+private:
+    std::vector<Contact> contacts;
+
+public:
+    void addContact(const std::string& name, const std::string& phoneNumber, const std::string& email) {
+        Contact newContact(name, phoneNumber, email);
+        contacts.push_back(newContact);
+        std::cout << "Contact added to the system." << std::endl;
+    }
+
+    void viewContactDetails(int contactIndex) const {
+        if (contactIndex >= 0 && contactIndex < contacts.size()) {
+            const Contact& contact = contacts[contactIndex];
+            std::cout << "Contact Details:" << std::endl;
+            std::cout << "Name: " << contact.name << std::endl;
+            std::cout << "Phone Number: " << contact.phoneNumber << std::endl;
+            std::cout << "Email: " << contact.email << std::endl;
+        } else {
+            std::cout << "Invalid contact index." << std::endl;
+        }
+    }
+
+    void searchContact(const std::string& keyword) const {
+        std::vector<Contact> searchResults;
+        for (const Contact& contact : contacts) {
+            if (contact.name.find(keyword) != std::string::npos || contact.phoneNumber.find(keyword) != std::string::npos ||
+                contact.email.find(keyword) != std::string::npos) {
+                searchResults.push_back(contact);
+            }
+        }
+
+        if (searchResults.empty()) {
+            std::cout << "No contacts found matching the keyword." << std::endl;
+        } else {
+            std::cout << "Search Results:" << std::endl;
+            for (size_t i = 0; i < searchResults.size(); ++i) {
+                std::cout << "Contact " << i + 1 << ":" << std::endl;
+                std::cout << "Name: " << searchResults[i].name << std::endl;
+                std::cout << "Phone Number: " << searchResults[i].phoneNumber << std::endl;
+                std::cout << "Email: " << searchResults[i].email << std::endl;
+                std::cout << std::endl;
+            }
+        }
+    }
+};
+
+int main() {
+    ContactManagementSystem contactSystem;
+    char choice;
+
+    do {
+        std::cout << "Contact Management System" << std::endl;
+        std::cout << "1. Add Contact" << std::endl;
+        std::cout << "2. View Contact Details" << std::endl;
+        std::cout << "3. Search Contact" << std::endl;
+        std::cout << "4. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                std::cin.ignore();
+                std::string name, phoneNumber, email;
+
+                std::cout << "Enter contact name: ";
+                std::getline(std::cin, name);
+
+                std::cout << "Enter phone number: ";
+                std::getline(std::cin, phoneNumber);
+
+                std::cout << "Enter email address: ";
+                std::getline(std::cin, email);
+
+                contactSystem.addContact(name, phoneNumber, email);
+                break;
+            }
+            case '2': {
+                int contactIndex;
+                std::cout << "Enter contact index to view details: ";
+                std::cin >> contactIndex;
+
+                contactSystem.viewContactDetails(contactIndex - 1); // Subtract 1 to convert to zero-based indexing
+                break;
+            }
+            case '3': {
+                std::cin.ignore();
+                std::string keyword;
+
+                std::cout << "Enter keyword to search: ";
+                std::getline(std::cin, keyword);
+
+                contactSystem.searchContact(keyword);
+                break;
+            }
+            case '4':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '4');
+
+    return 0;
+}
