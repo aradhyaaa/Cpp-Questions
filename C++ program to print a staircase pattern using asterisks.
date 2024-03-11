@@ -1,0 +1,27 @@
+#include <iostream>
+
+int main() {
+    int steps;
+
+    // Input the number of steps in the staircase
+    std::cout << "Enter the number of steps in the staircase: ";
+    std::cin >> steps;
+
+    // Loop to print the staircase pattern
+    for (int i = 1; i <= steps; ++i) {
+        // Print spaces before the asterisks
+        for (int j = 1; j <= steps - i; ++j) {
+            std::cout << " ";
+        }
+
+        // Print asterisks for each step
+        for (int k = 1; k <= i; ++k) {
+            std::cout << "*";
+        }
+
+        // Move to the next line after each step
+        std::cout << std::endl;
+    }
+
+    return 0;
+}
