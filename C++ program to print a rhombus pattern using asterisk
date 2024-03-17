@@ -1,0 +1,39 @@
+#include <iostream>
+
+int main() {
+    int rows;
+
+    // Input the number of rows in the rhombus
+    std::cout << "Enter the number of rows in the rhombus: ";
+    std::cin >> rows;
+
+    // Upper half of the rhombus
+    for (int i = 1; i <= rows; ++i) {
+        // Print spaces before the asterisks
+        for (int j = 1; j <= rows - i; ++j) {
+            std::cout << " ";
+        }
+        // Print asterisks for the upper half
+        for (int k = 1; k <= rows; ++k) {
+            std::cout << "*";
+        }
+        // Move to the next line after each row
+        std::cout << std::endl;
+    }
+
+    // Lower half of the rhombus
+    for (int i = rows - 1; i >= 1; --i) {
+        // Print spaces before the asterisks
+        for (int j = 1; j <= rows - i; ++j) {
+            std::cout << " ";
+        }
+        // Print asterisks for the lower half
+        for (int k = 1; k <= rows; ++k) {
+            std::cout << "*";
+        }
+        // Move to the next line after each row
+        std::cout << std::endl;
+    }
+
+    return 0;
+}
