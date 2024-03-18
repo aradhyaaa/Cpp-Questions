@@ -1,0 +1,21 @@
+#include <iostream>
+
+int main() {
+    int steps;
+
+    // Input the number of steps in the staircase
+    std::cout << "Enter the number of steps in the staircase: ";
+    std::cin >> steps;
+
+    // Loop to print the staircase pattern
+    for (int i = 1; i <= steps; ++i) {
+        // Print numbers for each step
+        for (int j = 1; j <= i; ++j) {
+            std::cout << j << " ";
+        }
+        // Move to the next line after each step
+        std::cout << std::endl;
+    }
+
+    return 0;
+}
