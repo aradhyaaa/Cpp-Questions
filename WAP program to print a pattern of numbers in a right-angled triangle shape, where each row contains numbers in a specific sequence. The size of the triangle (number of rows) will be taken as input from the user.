@@ -1,0 +1,21 @@
+#include <iostream>
+
+int main() {
+    int size;
+
+    // Input size of the triangle
+    std::cout << "Enter the size of the triangle: ";
+    std::cin >> size;
+
+    // Loop to print the triangle pattern
+    for (int i = size; i >= 1; --i) {
+        // Print numbers in each row
+        for (int j = i; j >= 1; --j) {
+            std::cout << j << " ";
+        }
+        // Move to the next line after each row
+        std::cout << std::endl;
+    }
+
+    return 0;
+}
