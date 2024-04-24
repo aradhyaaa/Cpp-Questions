@@ -1,0 +1,143 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <iomanip>
+
+struct WateringTask {
+    std::string taskName;
+    bool completed;
+};
+
+struct Plant {
+    std::string name;
+    std::string type;
+    std::vector<WateringTask> wateringTasks;
+};
+
+class GardenMaintenanceSystem {
+private:
+    std::vector<Plant> plants;
+
+public:
+    void addPlant(const std::string& name, const std::string& type) {
+        Plant newPlant{name, type, {}};
+        plants.push_back(newPlant);
+        std::cout << "Plant added to the maintenance system." << std::endl;
+    }
+
+    void scheduleWateringTask(int plantIndex, const std::string& taskName) {
+        if (plantIndex >= 0 && plantIndex < plants.size()) {
+            WateringTask newTask{taskName, false};
+            plants[plantIndex].wateringTasks.push_back(newTask);
+            std::cout << "Watering task scheduled for the plant." << std::endl;
+        } else {
+            std::cout << "Invalid plant index." << std::endl;
+        }
+    }
+
+    void markTaskAsCompleted(int plantIndex, int taskIndex) {
+        if (plantIndex >= 0 && plantIndex < plants.size()) {
+            if (taskIndex >= 0 && taskIndex < plants[plantIndex].wateringTasks.size()) {
+                plants[plantIndex].wateringTasks[taskIndex].completed = true;
+                std::cout << "Watering task marked as completed." << std::endl;
+            } else {
+                std::cout << "Invalid task index." << std::endl;
+            }
+        } else {
+            std::cout << "Invalid plant index." << std::endl;
+        }
+    }
+
+    void viewWateringSchedule(int plantIndex) const {
+        if (plantIndex >= 0 && plantIndex < plants.size()) {
+            const Plant& plant = plants[plantIndex];
+
+            std::cout << "Watering Schedule for Plant (" << plant.name << ", " << plant.type << "):" << std::endl;
+            if (plant.wateringTasks.empty()) {
+                std::cout << "No watering tasks scheduled." << std::endl;
+            } else {
+                std::cout << std::setw(4) << "ID" << std::setw(25) << "Task Name" << std::setw(12) << "Status" << std::endl;
+                std::cout << std::string(43, '-') << std::endl;
+
+                for (size_t i = 0; i < plant.wateringTasks.size(); ++i) {
+                    std::cout << "[" << (plant.wateringTasks[i].completed ? "Completed" : "Pending") << "] " << i + 1
+                              << ". " << std::setw(25) << plant.wateringTasks[i].taskName << std::endl;
+                }
+            }
+        } else {
+            std::cout << "Invalid plant index." << std::endl;
+        }
+    }
+};
+
+int main() {
+    GardenMaintenanceSystem maintenanceSystem;
+    char choice;
+
+    do {
+        std::cout << "Garden Maintenance System" << std::endl;
+        std::cout << "1. Add Plant" << std::endl;
+        std::cout << "2. Schedule Watering Task" << std::endl;
+        std::cout << "3. Mark Task as Completed" << std::endl;
+        std::cout << "4. View Watering Schedule" << std::endl;
+        std::cout << "5. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                std::cin.ignore();
+                std::string name, type;
+
+                std::cout << "Enter plant name: ";
+                std::getline(std::cin, name);
+
+                std::cout << "Enter plant type: ";
+                std::getline(std::cin, type);
+
+                maintenanceSystem.addPlant(name, type);
+                break;
+            }
+            case '2': {
+                int plantIndex;
+                std::cout << "Enter plant index to schedule watering task: ";
+                std::cin >> plantIndex;
+
+                std::cin.ignore();
+                std::string taskName;
+                std::cout << "Enter watering task name: ";
+                std::getline(std::cin, taskName);
+
+                maintenanceSystem.scheduleWateringTask(plantIndex - 1, taskName); // Subtract 1 to convert to zero-based indexing
+                break;
+            }
+            case '3': {
+                int plantIndex, taskIndex;
+                std::cout << "Enter plant index: ";
+                std::cin >> plantIndex;
+
+                std::cout << "Enter task index to mark as completed: ";
+                std::cin >> taskIndex;
+
+                maintenanceSystem.markTaskAsCompleted(plantIndex - 1, taskIndex - 1); // Subtract 1 to convert to zero-based indexing
+                break;
+            }
+            case '4': {
+                int plantIndex;
+                std::cout << "Enter plant index to view watering schedule: ";
+                std::cin >> plantIndex;
+
+                maintenanceSystem.viewWateringSchedule(plantIndex - 1); // Subtract 1 to convert to zero-based indexing
+                break;
+            }
+            case '5':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '5');
+
+    return 0;
+}
