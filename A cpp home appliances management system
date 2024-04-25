@@ -1,0 +1,143 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <iomanip>
+
+struct MaintenanceTask {
+    std::string taskName;
+    bool completed;
+};
+
+struct Appliance {
+    std::string name;
+    std::string type;
+    std::vector<MaintenanceTask> maintenanceTasks;
+};
+
+class ApplianceMaintenanceSystem {
+private:
+    std::vector<Appliance> appliances;
+
+public:
+    void addAppliance(const std::string& name, const std::string& type) {
+        Appliance newAppliance{name, type, {}};
+        appliances.push_back(newAppliance);
+        std::cout << "Appliance added to the maintenance system." << std::endl;
+    }
+
+    void scheduleMaintenanceTask(int applianceIndex, const std::string& taskName) {
+        if (applianceIndex >= 0 && applianceIndex < appliances.size()) {
+            MaintenanceTask newTask{taskName, false};
+            appliances[applianceIndex].maintenanceTasks.push_back(newTask);
+            std::cout << "Maintenance task scheduled for the appliance." << std::endl;
+        } else {
+            std::cout << "Invalid appliance index." << std::endl;
+        }
+    }
+
+    void markTaskAsCompleted(int applianceIndex, int taskIndex) {
+        if (applianceIndex >= 0 && applianceIndex < appliances.size()) {
+            if (taskIndex >= 0 && taskIndex < appliances[applianceIndex].maintenanceTasks.size()) {
+                appliances[applianceIndex].maintenanceTasks[taskIndex].completed = true;
+                std::cout << "Maintenance task marked as completed." << std::endl;
+            } else {
+                std::cout << "Invalid task index." << std::endl;
+            }
+        } else {
+            std::cout << "Invalid appliance index." << std::endl;
+        }
+    }
+
+    void viewMaintenanceSchedule(int applianceIndex) const {
+        if (applianceIndex >= 0 && applianceIndex < appliances.size()) {
+            const Appliance& appliance = appliances[applianceIndex];
+
+            std::cout << "Maintenance Schedule for Appliance (" << appliance.name << ", " << appliance.type << "):" << std::endl;
+            if (appliance.maintenanceTasks.empty()) {
+                std::cout << "No maintenance tasks scheduled." << std::endl;
+            } else {
+                std::cout << std::setw(4) << "ID" << std::setw(25) << "Task Name" << std::setw(12) << "Status" << std::endl;
+                std::cout << std::string(43, '-') << std::endl;
+
+                for (size_t i = 0; i < appliance.maintenanceTasks.size(); ++i) {
+                    std::cout << "[" << (appliance.maintenanceTasks[i].completed ? "Completed" : "Pending") << "] " << i + 1
+                              << ". " << std::setw(25) << appliance.maintenanceTasks[i].taskName << std::endl;
+                }
+            }
+        } else {
+            std::cout << "Invalid appliance index." << std::endl;
+        }
+    }
+};
+
+int main() {
+    ApplianceMaintenanceSystem maintenanceSystem;
+    char choice;
+
+    do {
+        std::cout << "Home Appliance Maintenance System" << std::endl;
+        std::cout << "1. Add Appliance" << std::endl;
+        std::cout << "2. Schedule Maintenance Task" << std::endl;
+        std::cout << "3. Mark Task as Completed" << std::endl;
+        std::cout << "4. View Maintenance Schedule" << std::endl;
+        std::cout << "5. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case '1': {
+                std::cin.ignore();
+                std::string name, type;
+
+                std::cout << "Enter appliance name: ";
+                std::getline(std::cin, name);
+
+                std::cout << "Enter appliance type: ";
+                std::getline(std::cin, type);
+
+                maintenanceSystem.addAppliance(name, type);
+                break;
+            }
+            case '2': {
+                int applianceIndex;
+                std::cout << "Enter appliance index to schedule maintenance task: ";
+                std::cin >> applianceIndex;
+
+                std::cin.ignore();
+                std::string taskName;
+                std::cout << "Enter maintenance task name: ";
+                std::getline(std::cin, taskName);
+
+                maintenanceSystem.scheduleMaintenanceTask(applianceIndex - 1, taskName); // Subtract 1 to convert to zero-based indexing
+                break;
+            }
+            case '3': {
+                int applianceIndex, taskIndex;
+                std::cout << "Enter appliance index: ";
+                std::cin >> applianceIndex;
+
+                std::cout << "Enter task index to mark as completed: ";
+                std::cin >> taskIndex;
+
+                maintenanceSystem.markTaskAsCompleted(applianceIndex - 1, taskIndex - 1); // Subtract 1 to convert to zero-based indexing
+                break;
+            }
+            case '4': {
+                int applianceIndex;
+                std::cout << "Enter appliance index to view maintenance schedule: ";
+                std::cin >> applianceIndex;
+
+                maintenanceSystem.viewMaintenanceSchedule(applianceIndex - 1); // Subtract 1 to convert to zero-based indexing
+                break;
+            }
+            case '5':
+                std::cout << "Exiting the program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != '5');
+
+    return 0;
+}
