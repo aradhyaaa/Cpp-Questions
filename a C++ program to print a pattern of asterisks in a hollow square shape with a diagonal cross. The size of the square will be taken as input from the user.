@@ -1,0 +1,28 @@
+#include <iostream>
+
+int main() {
+    int size;
+
+    // Input size of the square
+    std::cout << "Enter the size of the square: ";
+    std::cin >> size;
+
+    // Loop to print the square pattern
+    for (int i = 1; i <= size; ++i) {
+        for (int j = 1; j <= size; ++j) {
+            // Print asterisks for the first and last rows
+            // or for the first and last columns
+            if (i == 1 || i == size || j == 1 || j == size) {
+                std::cout << "* ";
+            } else if (i == j || j == size - i + 1) { // Print asterisks for the diagonal cross
+                std::cout << "* ";
+            } else {
+                std::cout << "  "; // Print spaces for the hollow part
+            }
+        }
+        // Move to the next line after each row
+        std::cout << std::endl;
+    }
+
+    return 0;
+}
