@@ -1,0 +1,39 @@
+#include <iostream>
+#include <vector>
+
+// Function to calculate factorial
+int factorial(int n) {
+    if (n == 0 || n == 1)
+        return 1;
+    else
+        return n * factorial(n - 1);
+}
+
+// Function to calculate binomial coefficient
+int binomialCoeff(int n, int k) {
+    return factorial(n) / (factorial(k) * factorial(n - k));
+}
+
+int main() {
+    int size;
+
+    // Input size of the triangle
+    std::cout << "Enter the number of rows for Pascal's Triangle: ";
+    std::cin >> size;
+
+    // Loop to print Pascal's Triangle
+    for (int i = 0; i < size; ++i) {
+        // Print leading spaces
+        for (int j = 0; j < size - i - 1; ++j) {
+            std::cout << "  ";
+        }
+        // Print numbers using binomial coefficients
+        for (int j = 0; j <= i; ++j) {
+            std::cout << binomialCoeff(i, j) << "   ";
+        }
+        // Move to the next line after each row
+        std::cout << std::endl;
+    }
+
+    return 0;
+}
