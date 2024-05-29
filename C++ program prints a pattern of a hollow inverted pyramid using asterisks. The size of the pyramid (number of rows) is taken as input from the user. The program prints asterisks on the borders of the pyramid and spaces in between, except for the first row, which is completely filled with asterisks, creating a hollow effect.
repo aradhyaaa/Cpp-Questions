@@ -1,0 +1,32 @@
+#include <iostream>
+
+// This program prints a pattern of a hollow inverted pyramid using asterisks.
+// The size of the pyramid (number of rows) is taken as input from the user.
+
+int main() {
+    int size;
+
+    // Input size of the pyramid
+    std::cout << "Enter the number of rows for the pyramid: ";
+    std::cin >> size;
+
+    // Loop to print the hollow inverted pyramid pattern
+    for (int i = size; i >= 1; --i) {
+        // Print leading spaces
+        for (int j = 0; j < size - i; ++j) {
+            std::cout << " ";
+        }
+        // Print asterisks and spaces
+        for (int j = 1; j <= 2 * i - 1; ++j) {
+            if (j == 1 || j == 2 * i - 1 || i == size) {
+                std::cout << "*";
+            } else {
+                std::cout << " ";
+            }
+        }
+        // Move to the next line after each row
+        std::cout << std::endl;
+    }
+
+    return 0;
+}
