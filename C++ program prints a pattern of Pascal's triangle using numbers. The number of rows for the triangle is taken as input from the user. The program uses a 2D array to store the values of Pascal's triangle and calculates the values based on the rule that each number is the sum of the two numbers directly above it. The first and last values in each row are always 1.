@@ -1,0 +1,33 @@
+#include <iostream>
+
+// This program prints a pattern of a Pascal's triangle using numbers.
+// The number of rows for the triangle is taken as input from the user.
+
+int main() {
+    int size;
+
+    // Input size of Pascal's triangle
+    std::cout << "Enter the number of rows for Pascal's triangle: ";
+    std::cin >> size;
+
+    // Create a 2D array to store the values of Pascal's triangle
+    int arr[size][size];
+
+    // Loop to calculate the values of Pascal's triangle
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j <= i; ++j) {
+            // The first and last values in every row are 1
+            if (j == 0 || j == i) {
+                arr[i][j] = 1;
+            } else {
+                // Other values are the sum of the values just above and to the left above
+                arr[i][j] = arr[i - 1][j - 1] + arr[i - 1][j];
+            }
+            std::cout << arr[i][j] << " ";
+        }
+        // Move to the next line after each row
+        std::cout << std::endl;
+    }
+
+    return 0;
+}
