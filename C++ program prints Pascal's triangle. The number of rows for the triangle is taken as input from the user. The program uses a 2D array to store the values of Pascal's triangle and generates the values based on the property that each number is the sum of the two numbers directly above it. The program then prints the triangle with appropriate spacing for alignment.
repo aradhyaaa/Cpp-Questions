@@ -1,0 +1,41 @@
+#include <iostream>
+
+// This program prints a pattern of a Pascal's triangle.
+// The number of rows for the triangle is taken as input from the user.
+
+int main() {
+    int rows;
+
+    // Input number of rows for Pascal's triangle
+    std::cout << "Enter the number of rows for Pascal's triangle: ";
+    std::cin >> rows;
+
+    // Allocate a 2D array to store the values of Pascal's triangle
+    int pascal[rows][rows];
+
+    // Initialize the first row of Pascal's triangle
+    pascal[0][0] = 1;
+
+    // Generate the values of Pascal's triangle
+    for (int i = 1; i < rows; ++i) {
+        pascal[i][0] = 1;
+        for (int j = 1; j <= i; ++j) {
+            pascal[i][j] = pascal[i - 1][j - 1] + pascal[i - 1][j];
+        }
+    }
+
+    // Print Pascal's triangle
+    for (int i = 0; i < rows; ++i) {
+        // Print leading spaces for alignment
+        for (int j = 0; j < rows - i - 1; ++j) {
+            std::cout << " ";
+        }
+        // Print the values of the current row
+        for (int j = 0; j <= i; ++j) {
+            std::cout << pascal[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    return 0;
+}
