@@ -1,0 +1,27 @@
+#include <iostream>
+
+// This program prints a pattern of an equilateral triangle using asterisks.
+// The size of the triangle (number of rows) is taken as input from the user.
+
+int main() {
+    int size;
+
+    // Input size of the triangle
+    std::cout << "Enter the number of rows for the triangle: ";
+    std::cin >> size;
+
+    // Loop to print the equilateral triangle
+    for (int i = 1; i <= size; ++i) {
+        // Print leading spaces to center the triangle
+        for (int j = 1; j <= size - i; ++j) {
+            std::cout << " ";
+        }
+        // Print asterisks for each row
+        for (int j = 1; j <= 2 * i - 1; ++j) {
+            std::cout << "*";
+        }
+        std::cout << std::endl;
+    }
+
+    return 0;
+}
