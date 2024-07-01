@@ -1,0 +1,48 @@
+#include <iostream>
+
+// This program prints a pattern of a butterfly using asterisks.
+// The size of the butterfly (number of rows for each wing) is taken as input from the user.
+
+int main() {
+    int size;
+
+    // Input size of the butterfly
+    std::cout << "Enter the number of rows for the butterfly wings: ";
+    std::cin >> size;
+
+    // Loop to print the upper half of the butterfly
+    for (int i = 1; i <= size; ++i) {
+        // Print the left wing
+        for (int j = 1; j <= i; ++j) {
+            std::cout << "*";
+        }
+        // Print the spaces between the wings
+        for (int j = 1; j <= 2 * (size - i); ++j) {
+            std::cout << " ";
+        }
+        // Print the right wing
+        for (int j = 1; j <= i; ++j) {
+            std::cout << "*";
+        }
+        std::cout << std::endl;
+    }
+
+    // Loop to print the lower half of the butterfly
+    for (int i = size; i >= 1; --i) {
+        // Print the left wing
+        for (int j = 1; j <= i; ++j) {
+            std::cout << "*";
+        }
+        // Print the spaces between the wings
+        for (int j = 1; j <= 2 * (size - i); ++j) {
+            std::cout << " ";
+        }
+        // Print the right wing
+        for (int j = 1; j <= i; ++j) {
+            std::cout << "*";
+        }
+        std::cout << std::endl;
+    }
+
+    return 0;
+}
