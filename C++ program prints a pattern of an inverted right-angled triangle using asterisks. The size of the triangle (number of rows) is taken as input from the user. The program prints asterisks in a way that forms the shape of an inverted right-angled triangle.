@@ -1,0 +1,23 @@
+#include <iostream>
+
+// This program prints a pattern of an inverted right-angled triangle using asterisks.
+// The size of the triangle (number of rows) is taken as input from the user.
+
+int main() {
+    int size;
+
+    // Input size of the triangle
+    std::cout << "Enter the number of rows for the triangle: ";
+    std::cin >> size;
+
+    // Loop to print the inverted right-angled triangle
+    for (int i = size; i >= 1; --i) {
+        // Print asterisks for each row
+        for (int j = 1; j <= i; ++j) {
+            std::cout << "*";
+        }
+        std::cout << std::endl;
+    }
+
+    return 0;
+}
