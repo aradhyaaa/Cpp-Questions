@@ -1,0 +1,29 @@
+#include <iostream>
+
+// This program prints a pattern of a zigzag using asterisks.
+// The height and length of the zigzag are taken as input from the user.
+
+int main() {
+    int height, length;
+
+    // Input height and length of the zigzag
+    std::cout << "Enter the height of the zigzag: ";
+    std::cin >> height;
+    std::cout << "Enter the length of the zigzag: ";
+    std::cin >> length;
+
+    // Loop to print the zigzag pattern
+    for (int i = 0; i < height; ++i) {
+        for (int j = 0; j < length; ++j) {
+            // Print asterisks in a zigzag pattern
+            if ((i + j) % (height - 1) == 0) {
+                std::cout << "*";
+            } else {
+                std::cout << " ";
+            }
+        }
+        std::cout << std::endl;
+    }
+
+    return 0;
+}
