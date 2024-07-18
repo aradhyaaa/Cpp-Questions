@@ -1,0 +1,27 @@
+#include <iostream>
+
+// This program prints a pattern of a hollow square using asterisks.
+// The size of the square (number of rows and columns) is taken as input from the user.
+
+int main() {
+    int size;
+
+    // Input size of the square
+    std::cout << "Enter the size of the square: ";
+    std::cin >> size;
+
+    // Loop to print the hollow square
+    for (int i = 1; i <= size; ++i) {
+        for (int j = 1; j <= size; ++j) {
+            // Print asterisks at the borders, and spaces inside
+            if (i == 1 || i == size || j == 1 || j == size) {
+                std::cout << "*";
+            } else {
+                std::cout << " ";
+            }
+        }
+        std::cout << std::endl;
+    }
+
+    return 0;
+}
