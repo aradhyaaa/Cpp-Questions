@@ -1,0 +1,27 @@
+#include <iostream>
+
+// This program prints a pattern of an X using asterisks.
+// The size of the X (number of rows) is taken as input from the user.
+
+int main() {
+    int size;
+
+    // Input size of the X
+    std::cout << "Enter the size of the X: ";
+    std::cin >> size;
+
+    // Loop to print the X pattern
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            // Print asterisks on the diagonals
+            if (i == j || i + j == size - 1) {
+                std::cout << "*";
+            } else {
+                std::cout << " ";
+            }
+        }
+        std::cout << std::endl;
+    }
+
+    return 0;
+}
