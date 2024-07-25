@@ -1,0 +1,31 @@
+#include <iostream>
+
+// This program prints a pattern of concentric squares using asterisks.
+// The size of the pattern (number of layers) is taken as input from the user.
+
+int main() {
+    int layers;
+
+    // Input number of layers for the concentric squares
+    std::cout << "Enter the number of layers for the concentric squares: ";
+    std::cin >> layers;
+
+    int size = 2 * layers - 1; // Calculate the total size of the pattern
+
+    // Loop to print the concentric squares pattern
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            // Calculate the distance from the nearest border
+            int minDist = std::min({i, j, size - 1 - i, size - 1 - j});
+            // Print asterisks for the layers
+            if (minDist < layers) {
+                std::cout << "*";
+            } else {
+                std::cout << " ";
+            }
+        }
+        std::cout << std::endl;
+    }
+
+    return 0;
+}
